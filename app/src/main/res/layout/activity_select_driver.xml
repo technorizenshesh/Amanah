@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/bg_color"
+    android:padding="@dimen/_10sdp"
+    tools:context=".activities.SelectDriverActivity">
+    <ImageView
+        android:layout_width="@dimen/_200sdp"
+        android:layout_height="@dimen/_70sdp"
+        android:src="@drawable/ic_logo"
+        android:layout_marginTop="@dimen/_70sdp"
+        android:layout_gravity="center_horizontal"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Please select driver gender"
+        android:textSize="@dimen/_16sdp"
+        android:fontFamily="@font/inter_bold"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_gravity="center_horizontal"
+        />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/_30sdp"
+        android:layout_gravity="center_horizontal"
+>
+      <RelativeLayout
+          android:id="@+id/rlMale"
+          android:layout_width="@dimen/_80sdp"
+          android:layout_height="@dimen/_80sdp"
+          android:layout_marginRight="@dimen/_10sdp"
+          android:padding="@dimen/_10sdp"
+          android:background="@drawable/white_circular_bg"
+          >
+          <ImageView
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:src="@drawable/male_ic"
+              android:layout_centerInParent="true"
+              />
+      </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/rlFemale"
+            android:layout_width="@dimen/_80sdp"
+            android:layout_height="@dimen/_80sdp"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:background="@drawable/white_circular_bg"
+            android:padding="@dimen/_10sdp"
+            >
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/female_ic"
+                android:gravity = "center"
+                android:layout_centerInParent="true"
+                />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnContinue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/red_rec_10dp_bg"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/_60sdp"
+        android:textAllCaps="false"
+        android:padding="@dimen/_10sdp"
+        android:layout_marginHorizontal="@dimen/_15sdp"
+        android:fontFamily="@font/poppins_medium"
+        android:textSize="@dimen/_16sdp"
+        android:textColor="@color/white"
+        android:layout_centerVertical="true"
+        android:text="Continue"
+        />
+</LinearLayout>
+</layout>

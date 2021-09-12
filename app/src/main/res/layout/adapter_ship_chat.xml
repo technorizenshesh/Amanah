@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/llLeftChat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginRight="@dimen/_15sdp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvLeftChat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:background="@drawable/white_chat_back_left"
+                android:padding="@dimen/_10sdp"
+                android:text="hi , Driver"/>
+
+            <TextView
+                android:id="@+id/tvLeftDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:visibility="gone"
+                android:layout_marginRight="@dimen/_2sdp"
+                android:textSize="@dimen/_10sdp"
+                android:text="5 min ago"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llRightChat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:gravity="end"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginRight="@dimen/_15sdp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvRightChat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:gravity="center"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:textColor="@color/white"
+                android:background="@drawable/purpal_chat_back_right"
+                android:padding="@dimen/_10sdp"
+                android:text="Hello Jhon How are you?"/>
+
+            <TextView
+                android:id="@+id/tvRightDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:visibility="gone"
+                android:layout_marginRight="@dimen/_2sdp"
+                android:textSize="@dimen/_10sdp"
+                android:text="1 min ago"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</layout>

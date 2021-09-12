@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/white_bg_5"
+    android:layout_marginTop="@dimen/_50sdp"
+    android:padding="@dimen/_15sdp"
+    android:minWidth="1000dp"
+    android:minHeight="1000dp"
+    android:id="@+id/root"
+    >
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:elevation="@dimen/_20sdp"
+        >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/white_bg_5"
+            >
+            <ImageView
+                android:id="@+id/ivSearch"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:src="@drawable/ic_search"
+                android:layout_centerVertical="true"
+                />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_medium"
+                android:backgroundTint="@color/white"
+                android:textSize="@dimen/_12sdp"
+                android:gravity="center_vertical"
+                android:hint="Search"
+                android:imeOptions="actionSearch"
+                android:textColorHint="@color/gray"
+                android:layout_toRightOf="@id/ivSearch"
+                />
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Recent"
+        android:textColor="@color/gray"
+        android:textSize="@dimen/_12sdp"
+        android:fontFamily="@font/inter_regular"
+        android:layout_marginTop="@dimen/_10sdp"
+        />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvRecent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:visibility="gone"
+        />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        >
+        <ImageView
+            android:id="@+id/ivLocation"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:src="@drawable/ic_place"
+            android:layout_centerVertical="true"
+            />
+
+        <TextView
+            android:id="@+id/tvPlace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kings Cross Underground Statio..."
+            android:fontFamily="@font/inter_regular"
+            android:textSize="@dimen/_11sdp"
+            android:layout_marginLeft="@dimen/_8sdp"
+            android:layout_toRightOf="@+id/ivLocation"
+            />
+        <TextView
+            android:id="@+id/tvCountry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New York"
+            android:fontFamily="@font/inter_regular"
+            android:textSize="@dimen/_11sdp"
+            android:layout_marginLeft="@dimen/_8sdp"
+            android:layout_toRightOf="@+id/ivLocation"
+            android:layout_below="@id/tvPlace"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_1sdp"
+            android:background="@color/gray"
+            android:layout_below="@id/tvCountry"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_toRightOf="@id/ivLocation"
+            android:layout_marginLeft="@dimen/_8sdp"
+            />
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_15sdp"
+        >
+        <ImageView
+            android:id="@+id/ivLocation1"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:src="@drawable/ic_place"
+            android:layout_centerVertical="true"
+            />
+
+        <TextView
+            android:id="@+id/tvPlace1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kings Cross Underground Statio..."
+            android:fontFamily="@font/inter_regular"
+            android:textSize="@dimen/_11sdp"
+            android:layout_marginLeft="@dimen/_8sdp"
+            android:layout_toRightOf="@+id/ivLocation1"
+            />
+        <TextView
+            android:id="@+id/tvCountry1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New York"
+            android:fontFamily="@font/inter_regular"
+            android:textSize="@dimen/_11sdp"
+            android:layout_marginLeft="@dimen/_8sdp"
+            android:layout_toRightOf="@+id/ivLocation1"
+            android:layout_below="@id/tvPlace1"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_1sdp"
+            android:background="@color/gray"
+            android:layout_below="@id/tvCountry1"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_toRightOf="@id/ivLocation1"
+            android:layout_marginLeft="@dimen/_8sdp"
+            />
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_15sdp"
+        >
+        <ImageView
+            android:id="@+id/ivLocation2"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:src="@drawable/ic_place"
+            android:layout_centerVertical="true"
+            />
+
+        <TextView
+            android:id="@+id/tvPlace2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kings Cross Underground Statio..."
+            android:fontFamily="@font/inter_regular"
+            android:textSize="@dimen/_11sdp"
+            android:layout_marginLeft="@dimen/_8sdp"
+            android:layout_toRightOf="@+id/ivLocation2"
+            />
+        <TextView
+            android:id="@+id/tvCountry2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New York"
+            android:fontFamily="@font/inter_regular"
+            android:textSize="@dimen/_11sdp"
+            android:layout_marginLeft="@dimen/_8sdp"
+            android:layout_toRightOf="@+id/ivLocation2"
+            android:layout_below="@id/tvPlace2"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_1sdp"
+            android:background="@color/gray"
+            android:layout_below="@id/tvCountry2"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_toRightOf="@id/ivLocation2"
+            android:layout_marginLeft="@dimen/_8sdp"
+            />
+
+    </RelativeLayout>
+</LinearLayout>

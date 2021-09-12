@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/drawerLayout">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_60sdp"
+                    android:background="@drawable/bottom_cornor_40">
+
+                    <ImageView
+                        android:id="@+id/ivMenu"
+                        android:layout_width="@dimen/_30sdp"
+                        android:layout_height="@dimen/_30sdp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/_20sdp"
+                        android:layout_marginTop="@dimen/_25sdp"
+                        android:background="@drawable/ic_menu_white" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginTop="@dimen/_7sdp"
+                        android:fontFamily="@font/inter_bold"
+                        android:text="@string/my_products"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_16sdp" />
+
+                </RelativeLayout>
+
+               <androidx.recyclerview.widget.RecyclerView
+                   android:id="@+id/rvMyProducts"
+                   android:layout_width="match_parent"
+                   android:layout_margin="@dimen/_5sdp"
+                   app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                   android:layout_height="match_parent">
+               </androidx.recyclerview.widget.RecyclerView>
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/ivAddItems"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="@dimen/_15sdp"
+                android:layout_marginRight="@dimen/_15sdp"
+                android:src="@drawable/ic_add_items_icon"/>
+
+        </RelativeLayout>
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/navigation"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start">
+
+            <include
+                android:id="@+id/child_nav_drawer"
+                layout="@layout/nav_res_drawer_items" />
+
+        </com.google.android.material.navigation.NavigationView>
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+
+</layout>

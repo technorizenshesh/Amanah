@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/drawerLayout">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_60sdp"
+                    android:background="@drawable/bottom_cornor_40">
+
+                    <ImageView
+                        android:id="@+id/ivMenu"
+                        android:layout_width="@dimen/_30sdp"
+                        android:layout_height="@dimen/_30sdp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/_20sdp"
+                        android:layout_marginTop="@dimen/_25sdp"
+                        android:src="@drawable/ic_menu_white" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginTop="@dimen/_7sdp"
+                        android:fontFamily="@font/inter_bold"
+                        android:text="@string/select_service"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_16sdp" />
+
+                </RelativeLayout>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cvDelivery"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginRight="@dimen/_5sdp"
+                    app:cardCornerRadius="@dimen/_5sdp"
+                    app:cardElevation="@dimen/_5sdp">
+
+                    <RelativeLayout
+                        android:id="@+id/llProfile2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/_10sdp">
+
+                        <ImageView
+                            android:id="@+id/ivProfile2"
+                            android:layout_width="@dimen/_50sdp"
+                            android:layout_height="@dimen/_50sdp"
+                            android:background="@drawable/light_gray_circle" />
+
+                        <TextView
+                            android:id="@+id/tvTitle2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:layout_marginTop="@dimen/_7sdp"
+                            android:layout_toRightOf="@id/ivProfile2"
+                            android:fontFamily="@font/inter_medium"
+                            android:text="@string/delivery_services"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_14sdp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/tvTitle2"
+                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:layout_toRightOf="@id/ivProfile2"
+                            android:fontFamily="@font/inter_medium"
+                            android:text="@string/adeeg_la_isku_halyn_karo"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12sdp" />
+
+                        <ImageView
+                            android:layout_width="@dimen/_15sdp"
+                            android:layout_height="@dimen/_15sdp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/right_arrow" />
+                    </RelativeLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cvTaxi"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_20sdp"
+                    android:layout_marginLeft="@dimen/_5sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginRight="@dimen/_5sdp"
+                    app:cardCornerRadius="@dimen/_5sdp"
+                    app:cardElevation="@dimen/_5sdp">
+
+                    <RelativeLayout
+                        android:id="@+id/llProfile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/_10sdp">
+
+                        <ImageView
+                            android:id="@+id/ivProfile"
+                            android:layout_width="@dimen/_50sdp"
+                            android:layout_height="@dimen/_50sdp"
+                            android:background="@drawable/light_gray_circle" />
+
+                        <TextView
+                            android:id="@+id/tvTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:layout_marginTop="@dimen/_7sdp"
+                            android:layout_toRightOf="@id/ivProfile"
+                            android:fontFamily="@font/inter_medium"
+                            android:text="@string/taxi_services"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_14sdp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/tvTitle"
+                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:layout_toRightOf="@id/ivProfile"
+                            android:fontFamily="@font/inter_medium"
+                            android:text="Socdaalka ee Tagsi"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12sdp" />
+
+                        <ImageView
+                            android:layout_width="@dimen/_15sdp"
+                            android:layout_height="@dimen/_15sdp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/right_arrow" />
+                    </RelativeLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:id="@+id/swipLayout">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        android:id="@+id/rvMyOrder"/>
+
+                </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/navigation"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start">
+
+            <include
+                android:id="@+id/child_nav_drawer"
+                layout="@layout/dev_drawer_items" />
+
+        </com.google.android.material.navigation.NavigationView>
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+
+</layout>

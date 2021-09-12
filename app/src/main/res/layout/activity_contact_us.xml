@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/_20sdp"
+    tools:context=".activities.ContactUsActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_above="@id/btnAdd"
+        >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_5sdp"
+            >
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/ivBack"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:elevation="@dimen/_40sdp"
+                app:cardCornerRadius="@dimen/_50sdp"
+                >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <ImageView
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:src="@drawable/left_arrow_black"
+                        android:layout_centerInParent="true"
+                        />
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tell_more"
+                android:textSize="@dimen/_14sdp"
+                android:textColor="@color/textColor"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/inter_bold"
+                />
+        </RelativeLayout>
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="true">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/i_left_an_item"
+            android:textSize="@dimen/_14sdp"
+            android:textColor="@color/textColor"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="@font/inter_bold"
+            android:layout_marginTop="@dimen/_20sdp"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/if_you_ve_lost_an_item_you_will_need_to_send_us_an_message_immediately_please_remembering_to_provide_us_with_as_many_details_as_possible_about_your_lost_item_and_the_ride_you_took_if_we_find_it_we_ll_connect_you_with_the_driver_directly_to_get_it_back"
+            android:textSize="@dimen/_12sdp"
+            android:textColor="@color/textColor"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="@font/inter_regular"
+            android:layout_marginTop="@dimen/_10sdp"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:layout_marginRight="@dimen/_8sdp"
+                >
+
+                <TextView
+                    android:id="@+id/tvExp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Date"
+                    android:textColor="@color/textColor"
+                    android:fontFamily="@font/inter_bold"
+                    android:textSize="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:textAllCaps="true"
+                    />
+                <EditText
+                    android:id="@+id/etExpDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/light_gray_radius_5"
+                    android:padding="@dimen/_10sdp"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/_11sdp"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_below="@id/tvExp"
+                    />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:layout_marginLeft="@dimen/_8sdp"
+                >
+
+                <TextView
+                    android:id="@+id/tvCvv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Time"
+                    android:textColor="@color/textColor"
+                    android:fontFamily="@font/inter_bold"
+                    android:textSize="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:textAllCaps="true"
+                    />
+                <EditText
+                    android:id="@+id/etCVV"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/light_gray_radius_5"
+                    android:padding="@dimen/_10sdp"
+                    android:gravity="center_vertical"
+                    android:textSize="@dimen/_11sdp"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_below="@id/tvCvv"
+                    />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Place"
+            android:textSize="@dimen/_14sdp"
+            android:textColor="@color/textColor"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="@font/inter_bold"
+            android:layout_marginTop="@dimen/_10sdp"
+            />
+        <EditText
+            android:id="@+id/edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text|textMultiLine"
+            android:background="@drawable/light_gray_radius_5"
+            android:hint="Your message here..."
+            android:padding="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:gravity="top"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Have you been hurt?"
+        android:textSize="@dimen/_14sdp"
+        android:textColor="@color/textColor"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="@font/inter_bold"
+        android:layout_marginTop="@dimen/_10sdp"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/_10sdp"
+        >
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".5"
+            >
+
+            <CheckBox
+                android:id="@+id/checkboxYes"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:textColor="@color/white"
+                android:checked="true"
+                android:background="@drawable/checkbox_selector"
+                android:button="@null"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Yes"
+                android:textSize="@dimen/_11sdp"
+                android:textColor="@color/textColor"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/inter_bold"
+                android:layout_marginLeft="@dimen/_5sdp"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".5"
+            >
+
+            <CheckBox
+                android:id="@+id/checkboxNo"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:textColor="@color/white"
+                android:checked="false"
+                android:background="@drawable/checkbox_selector"
+                android:button="@null"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No"
+                android:textSize="@dimen/_11sdp"
+                android:textColor="@color/textColor"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/inter_bold"
+                android:layout_marginLeft="@dimen/_5sdp"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Have the accident occurred"
+            android:textSize="@dimen/_14sdp"
+            android:textColor="@color/textColor"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="@font/inter_bold"
+            android:layout_marginTop="@dimen/_10sdp"
+            />
+        <EditText
+            android:id="@+id/etAccidentOccured"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text|textMultiLine"
+            android:background="@drawable/light_gray_radius_5"
+            android:hint="Your message here..."
+            android:padding="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:gravity="top"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_100sdp"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:background="@drawable/light_gray_radius_5">
+
+        <ImageView
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:src="@drawable/ic_camera"
+            android:layout_centerInParent="true"
+            />
+
+    </RelativeLayout>
+
+</LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnAdd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/red_rec_10dp_bg"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:textAllCaps="false"
+        android:padding="@dimen/_10sdp"
+        android:fontFamily="@font/poppins_medium"
+        android:textSize="@dimen/_12sdp"
+        android:textColor="@color/white"
+        android:layout_centerVertical="true"
+        android:text="Submit"
+        android:layout_margin="@dimen/_15sdp"
+        />
+
+</RelativeLayout>
+</layout>

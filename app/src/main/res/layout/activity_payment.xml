@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+    <LinearLayout
+        android:id="@+id/llToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible"
+        >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_20sdp"
+        >
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/ivBack"
+            android:layout_width="@dimen/_25sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:elevation="@dimen/_40sdp"
+            app:cardCornerRadius="@dimen/_50sdp"
+            android:layout_marginLeft="@dimen/_15sdp"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+                <ImageView
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:src="@drawable/left_arrow_black"
+                    android:layout_centerInParent="true"
+                    />
+
+
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/payment_info"
+            android:textSize="@dimen/_12sdp"
+            android:textColor="@color/textColor"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="@font/inter_semi_bold"
+            />
+
+    </RelativeLayout>
+    </LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvPayinfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_15sdp"
+        android:layout_below="@+id/llToolbar"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+
+
+
+    <ImageView
+        android:id="@+id/actionAdd"
+        android:layout_width="@dimen/_50sdp"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/_10sdp"
+        android:src="@drawable/plus_red_bg"
+        app:fabSize="normal"
+        app:maxImageSize="@dimen/_25sdp"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:id="@+id/txtCardNotFound"
+        android:textColor="@color/black"
+        android:text="Card not available"
+        android:textSize="18dp"
+        android:fontFamily="@font/poppins_regular"
+        android:visibility="gone"/>
+
+
+
+
+
+
+
+</RelativeLayout>
+</layout>

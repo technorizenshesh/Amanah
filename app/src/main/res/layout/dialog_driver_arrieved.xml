@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="@dimen/_10sdp"
+    android:layout_marginHorizontal="@dimen/_20sdp"
+    >
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/_10sdp">
+
+    <ImageView
+        android:layout_width="@dimen/_50sdp"
+        android:layout_height="@dimen/_100sdp"
+        android:src="@drawable/car_top"
+        android:layout_gravity="center_horizontal"
+        />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your taxi has arrived"
+        android:fontFamily="@font/inter_regular"
+        android:textColor="@color/black"
+        android:layout_gravity="center_horizontal"
+        android:textSize="@dimen/_11sdp"
+        />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/_10sdp"
+        >
+<androidx.appcompat.widget.AppCompatButton
+    android:id="@+id/btnIamComing"
+    android:layout_width="@dimen/_100sdp"
+    android:layout_height="@dimen/_40sdp"
+    android:text="I'm Coming"
+    android:background="@drawable/red_bg_10_corners"
+    android:textColor="@color/white"
+    android:paddingHorizontal="@dimen/_15sdp"
+    android:layout_marginRight="@dimen/_5sdp"
+    />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCall"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/_50sdp"
+            app:backgroundTint="@color/white"
+            app:rippleColor="@color/black"
+            app:cornerRadius="8dp"
+            android:layout_marginLeft="@dimen/_5sdp"
+            android:layout_marginRight="@dimen/_15sdp"
+            android:elevation="@dimen/_3sdp"
+            android:outlineProvider="background"
+            android:outlineSpotShadowColor="@color/black"
+            android:text="Call"
+            android:textAllCaps="false"
+            android:fontFamily="@font/inter_regular"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12sdp"
+             />
+
+
+    </LinearLayout>
+</LinearLayout>
+</androidx.cardview.widget.CardView>

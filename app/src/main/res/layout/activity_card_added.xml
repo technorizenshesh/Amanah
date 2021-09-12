@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.CardAdded"
+    android:orientation="vertical"
+    android:padding="@dimen/_20sdp"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_5sdp"
+        >
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/ivBack"
+            android:layout_width="@dimen/_25sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:elevation="@dimen/_40sdp"
+            app:cardCornerRadius="@dimen/_50sdp"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <ImageView
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:src="@drawable/left_arrow_black"
+                    android:layout_centerInParent="true"
+                    />
+
+
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Card Added"
+            android:textSize="@dimen/_14sdp"
+            android:textColor="@color/textColor"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="@font/inter_semi_bold"
+            />
+
+    </RelativeLayout>
+
+    <com.vinaygaba.creditcardview.CreditCardView
+        android:id="@+id/card1"
+        android:layout_width="match_parent"
+        android:layout_height="225dp"
+        app:cardFrontBackground="@drawable/card_bg1"
+        app:cardNumber="5500005555555559"
+        app:brandLogo="@drawable/mastercard"
+        app:cardName="Jeff Stockwell"
+        app:cardNumberTextColor="@color/white"
+        app:cardNumberFormat="masked_all_but_last_four"
+        app:cardNameTextColor="@color/white"
+        app:type="mastercard"
+        app:putChip="true"
+        app:expiryDate = "02/22"
+        app:expiryDateTextColor="@color/white"
+        app:isEditable="false"
+        app:isFlippable="true"
+        app:validTillTextColor="@color/white"
+        app:hintTextColor = "@color/white"
+        android:layout_marginTop="@dimen/_30sdp"
+        />
+
+</LinearLayout>
+</layout>

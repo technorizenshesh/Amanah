@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".activities.PaymentOptionActivity">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/map_bg"
+            />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_15sdp"
+            >
+            <RelativeLayout
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:background="@drawable/white_circular_bg"
+                >
+                <ImageView
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:src="@drawable/left_arrow_black"
+                    android:layout_centerInParent="true"
+                    />
+            </RelativeLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Payment Options"
+                android:fontFamily="@font/inter_bold"
+                android:textSize="@dimen/_14sdp"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/textColor"
+                android:layout_centerVertical="true"
+                />
+        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_220sdp"
+            android:background="@drawable/rec_top_40"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical"
+            android:padding="@dimen/_8sdp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select Payment"
+                android:textColor="@color/black"
+                android:fontFamily="@font/inter_medium"
+                android:textSize="@dimen/_14sdp"
+
+                />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvCar"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+    </RelativeLayout>
+</layout>

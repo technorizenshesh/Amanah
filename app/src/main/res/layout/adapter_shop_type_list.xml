@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:id="@+id/itemView"
+        android:clickable="true"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/_10sdp"
+        android:layout_marginLeft="@dimen/_10sdp"
+        app:cardCornerRadius="@dimen/_5sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        app:cardElevation="@dimen/_5sdp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:weightSum="10"
+            android:padding="@dimen/_8sdp">
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_weight="1.3"
+                android:layout_height="@dimen/_30sdp"
+                android:layout_centerVertical="true"
+                android:background="@drawable/light_gray_circle" />
+
+            <TextView
+                android:id="@+id/tvTypeName"
+                android:layout_width="0dp"
+                android:layout_weight="7.7"
+                android:layout_height="wrap_content"
+                android:text="@string/electronics"
+                android:layout_marginLeft="@dimen/_5sdp"
+                android:textSize="@dimen/_12sdp"
+                android:textColor="@color/black"
+                android:layout_toRightOf="@id/ivProfile2"
+                android:fontFamily="@font/inter_medium" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/adeeg_la_isku_halyn_karo"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:textSize="@dimen/_12sdp"
+                android:visibility="gone"
+                android:textColor="@color/black"
+                android:layout_toRightOf="@id/ivProfile2"
+                android:fontFamily="@font/inter_medium"
+                android:layout_below="@id/tvTitle2" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:padding="@dimen/_7sdp"
+                android:layout_height="match_parent"
+                android:src="@drawable/right_arrow"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</layout>

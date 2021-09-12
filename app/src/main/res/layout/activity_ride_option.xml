@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.nova.activities.RideOptionActivity">
+
+        <fragment
+            android:layout_above="@+id/card_footer"
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_15sdp">
+
+            <RelativeLayout
+                android:id="@+id/btnBack"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:background="@drawable/white_bg_5">
+
+                <ImageView
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:src="@drawable/left_arrow_black"
+                    android:layout_centerInParent="true" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/titler"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ride Option"
+                android:fontFamily="@font/poppins_medium"
+                android:textSize="@dimen/_14sdp"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/black"
+                android:layout_centerVertical="true" />
+
+            <ImageView
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:src="@drawable/ic_logo"
+                android:visibility="gone"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="@dimen/_10sdp"
+                app:tint="@color/purple_200" />
+
+        </RelativeLayout>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycle_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/_5sdp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_ride_book"
+                    android:orientation="horizontal" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="1">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight=".4"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/trip_distance"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12sdp"
+                            android:layout_marginTop="@dimen/_5sdp"
+                            android:layout_marginStart="@dimen/_15sdp"
+                            android:fontFamily="@font/poppins_regular" />
+
+                        <TextView
+                            android:id="@+id/tv_ride_distance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="12 min"
+                            android:layout_marginTop="@dimen/_6sdp"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12sdp"
+                            android:layout_marginStart="@dimen/_15sdp"
+                            android:fontFamily="@font/poppins_regular" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.6"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/select_payment_type"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_11sdp"
+                            android:layout_marginTop="@dimen/_5sdp"
+                            android:fontFamily="@font/poppins_regular" />
+
+                        <RadioGroup
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:weightSum="1"
+                            android:orientation="horizontal"
+                            android:gravity="center">
+
+                            <RadioButton
+                                android:id="@+id/rbCash"
+                                android:layout_width="0dp"
+                                android:layout_weight="0.5"
+                                android:includeFontPadding="false"
+                                android:textSize="@dimen/_12sdp"
+                                android:layout_height="wrap_content"
+                                android:textStyle="bold"
+                                android:text="Cash Pay"/>
+
+                            <RadioButton
+                                android:id="@+id/rbCard"
+                                android:layout_width="0dp"
+                                android:includeFontPadding="false"
+                                android:layout_weight="0.5"
+                                android:textSize="@dimen/_12sdp"
+                                android:layout_height="wrap_content"
+                                android:textStyle="bold"
+                                android:text="Card Pay"/>
+
+                        </RadioGroup>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_book_ride"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/green_circular_bg"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:textAllCaps="false"
+                    android:padding="@dimen/_10sdp"
+                    android:fontFamily="@font/poppins_medium"
+                    android:textSize="@dimen/_16sdp"
+                    android:textColor="@color/white"
+                    android:layout_centerVertical="true"
+                    android:text="Book Ride" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </RelativeLayout>
+</layout>

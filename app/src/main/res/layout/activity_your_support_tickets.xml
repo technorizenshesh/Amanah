@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/_20sdp"
+    tools:context=".activities.YourSupportTicketsActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/ivBack"
+            android:layout_width="@dimen/_25sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:elevation="@dimen/_40sdp"
+            app:cardCornerRadius="@dimen/_50sdp"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <ImageView
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:src="@drawable/left_arrow_black"
+                    android:layout_centerInParent="true"
+                    />
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tell_more"
+            android:textSize="@dimen/_14sdp"
+            android:textColor="@color/black"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="@font/inter_bold"
+            />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/i_left_an_item"
+        android:textSize="@dimen/_14sdp"
+        android:textColor="@color/textColor"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="@font/inter_bold"
+        android:layout_marginTop="@dimen/_20sdp"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/if_you_ve_lost_an_item_you_will_need_to_send_us_an_message_immediately_please_remembering_to_provide_us_with_as_many_details_as_possible_about_your_lost_item_and_the_ride_you_took_if_we_find_it_we_ll_connect_you_with_the_driver_directly_to_get_it_back"
+        android:textSize="@dimen/_12sdp"
+        android:textColor="@color/textColor"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="@font/inter_regular"
+        android:layout_marginTop="@dimen/_10sdp"
+        />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tell us"
+            android:textSize="@dimen/_14sdp"
+            android:textColor="@color/textColor"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="@font/inter_bold"
+            android:layout_marginTop="@dimen/_20sdp"
+            />
+        <EditText
+            android:id="@+id/edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_120sdp"
+            android:inputType="text|textMultiLine"
+            android:background="@drawable/light_gray_radius_5"
+            android:hint="Your message here..."
+            android:padding="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:gravity="top"/>
+    </LinearLayout>
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnAdd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/red_rec_10dp_bg"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:textAllCaps="false"
+        android:padding="@dimen/_10sdp"
+        android:fontFamily="@font/poppins_medium"
+        android:textSize="@dimen/_12sdp"
+        android:textColor="@color/white"
+        android:layout_centerVertical="true"
+        android:text="Submit"
+        android:layout_margin="@dimen/_15sdp"
+        />
+
+</RelativeLayout>
+</layout>
