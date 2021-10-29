@@ -8,63 +8,71 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.maps.Projection;
 import com.tech.amanah.R;
+import com.tech.amanah.Utils.ProjectUtil;
+import com.tech.amanah.databinding.RideHistoryItemBinding;
 import com.tech.amanah.taxiservices.activities.RideDetailActivity;
+import com.tech.amanah.taxiservices.models.ModelTaxiHistory;
 
-/**
- * Created by Ravindra Birla on 19,February,2021
- */
-public class RideHistoryAdapter extends RecyclerView.Adapter<RideHistoryAdapter.RideHistoryViewHolder> {
+import java.util.ArrayList;
 
-    Context context;
+public class RideHistoryAdapter extends RecyclerView.Adapter<RideHistoryAdapter.RideHolder> {
 
-    public RideHistoryAdapter(Context context)
-    {
-        this.context = context;
+    Context mContext;
+    ArrayList<ModelTaxiHistory.Result> historyList;
+
+    public RideHistoryAdapter(Context mContext, ArrayList<ModelTaxiHistory.Result> historyList) {
+        this.mContext = mContext;
+        this.historyList = historyList;
     }
 
     @NonNull
     @Override
-    public RideHistoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View listItem= layoutInflater.inflate(R.layout.ride_history_item, parent, false);
-        RideHistoryViewHolder viewHolder = new RideHistoryViewHolder(listItem);
-        return viewHolder;
+    public RideHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        RideHistoryItemBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mContext),
+                R.layout.ride_history_item, parent, false);
+        return new RideHolder(binding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RideHistoryViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RideHolder holder, int position) {
 
+        holder.binding.setData(historyList.get(position));
 
+        if (historyList.get(position).getStatus().equals("Cancel_by_user") || historyList.get(position).getStatus().equals("Cancel"))
+            holder.binding.tvStatus.setTextColor(ContextCompat.getColor(mContext, R.color.red_spalsh));
+
+        holder.binding.tvStatus.setText(historyList.get(position)
+                .getStatus().replace("_", " ").toUpperCase());
+
+        holder.binding.ivDetails.setOnClickListener(v -> {
+            ProjectUtil.blinkAnimation(holder.binding.ivDetails);
+            mContext.startActivity(new Intent(mContext,RideDetailActivity.class)
+            .putExtra("data",historyList.get(position))
+            );
+        });
 
     }
 
     @Override
     public int getItemCount() {
-        return 2;
+        return historyList == null ? 0 : historyList.size();
     }
 
-    public class RideHistoryViewHolder extends RecyclerView.ViewHolder
-    {
+    public class RideHolder extends RecyclerView.ViewHolder {
 
-        LinearLayout llRideDetail;
+        RideHistoryItemBinding binding;
 
-        public RideHistoryViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            llRideDetail = itemView.findViewById(R.id.llRideDetail);
-            llRideDetail.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                    context.startActivity(new Intent(context, RideDetailActivity.class));
-
-                }
-            });
-
+        public RideHolder(RideHistoryItemBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
+
     }
 
 }

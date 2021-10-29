@@ -38,22 +38,21 @@
 
             </RelativeLayout>
 
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
                 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                    android:id="@+id/swipLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/swipLayout"
                     android:layout_above="@+id/llSummary">
 
                     <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvCartItem"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        android:id="@+id/rvCartItem"/>
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
                 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
@@ -69,6 +68,124 @@
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/_5sdp"
+                            android:background="@color/light_gray">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="@dimen/_5sdp"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:layout_width="@dimen/_25sdp"
+                                    android:layout_height="@dimen/_25sdp"
+                                    android:src="@drawable/coupan_icon"/>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/add_promo_code"
+                                    android:textSize="@dimen/_15sdp"
+                                    android:layout_marginLeft="@dimen/_5sdp"
+                                    android:textStyle="bold"
+                                    android:padding="@dimen/_3sdp"
+                                    android:textColor="@color/black">
+                                </TextView>
+
+                            </LinearLayout>
+
+                            <androidx.appcompat.widget.AppCompatButton
+                                android:id="@+id/btAdd"
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/_35sdp"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:background="@drawable/green_circular_bg"
+                                android:text="@string/add"
+                                android:textAllCaps="false"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_10sdp"
+                                android:textStyle="bold" />
+
+                        </RelativeLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/_3sdp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/item_total"
+                                android:textSize="15sp"
+                                android:textStyle="bold"
+                                android:layout_weight=".5"
+                                android:layout_marginStart="@dimen/_10sdp"
+                                android:padding="@dimen/_3sdp"
+                                android:layout_marginLeft="@dimen/_10sdp">
+                            </TextView>
+
+                            <TextView
+                                android:id="@+id/itemPlusDevCharges"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="15sp"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:gravity="end"
+                                android:text="0.0"
+                                android:layout_marginEnd="@dimen/_10sdp"
+                                android:layout_weight=".5"
+                                android:layout_marginStart="@dimen/_10sdp"
+                                android:padding="@dimen/_3sdp">
+
+                            </TextView>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="@dimen/_3sdp"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/dev_charge"
+                                android:textSize="15sp"
+                                android:textStyle="bold"
+                                android:layout_weight=".5"
+                                android:layout_marginStart="@dimen/_10sdp"
+                                android:padding="@dimen/_3sdp"
+                                android:layout_marginLeft="@dimen/_10sdp">
+                            </TextView>
+
+                            <TextView
+                                android:id="@+id/devCharges"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textSize="15sp"
+                                android:textColor="@color/black"
+                                android:textStyle="bold"
+                                android:gravity="end"
+                                android:text="0.0"
+                                android:layout_marginEnd="@dimen/_10sdp"
+                                android:layout_weight=".5"
+                                android:layout_marginStart="@dimen/_10sdp"
+                                android:padding="@dimen/_3sdp">
+
+                            </TextView>
+
+                        </LinearLayout>
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -86,11 +203,10 @@
                                 android:layout_marginStart="@dimen/_10sdp"
                                 android:padding="@dimen/_3sdp"
                                 android:layout_marginLeft="@dimen/_10sdp">
-
                             </TextView>
 
                             <TextView
-                                android:id="@+id/itemPlusDevCharges"
+                                android:id="@+id/toPay"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:textSize="15sp"

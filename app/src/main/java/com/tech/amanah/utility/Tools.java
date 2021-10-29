@@ -65,7 +65,7 @@ public class Tools {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                strAdd = "Cant get Address";
+                strAdd = "";
                 Log.w("My Current address", "Canont get Address!");
             }
         }

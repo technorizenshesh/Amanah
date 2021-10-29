@@ -68,26 +68,42 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/_20sdp"
-            android:layout_marginTop="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_10sdp"
             android:fontFamily="@font/poppins_medium"
+            android:padding="@dimen/_5sdp"
+            android:background="?attr/selectableItemBackground"
             android:text="@string/home"
             android:textAllCaps="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_14sdp" />
+
+        <TextView
+            android:id="@+id/btnRideHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:fontFamily="@font/poppins_medium"
             android:padding="@dimen/_5sdp"
-            android:textSize="@dimen/_14sdp"
-            android:textColor="@color/black" />
+            android:background="?attr/selectableItemBackground"
+            android:text="@string/ride_history"
+            android:textAllCaps="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_14sdp" />
 
         <TextView
             android:id="@+id/btnOrders"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/_20sdp"
-            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_8sdp"
             android:fontFamily="@font/poppins_medium"
+            android:padding="@dimen/_5sdp"
+            android:background="?attr/selectableItemBackground"
             android:text="@string/my_orders"
             android:textAllCaps="true"
-            android:padding="@dimen/_5sdp"
-            android:textSize="@dimen/_14sdp"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:textSize="@dimen/_14sdp" />
 
         <TextView
             android:id="@+id/tvPromocode"
@@ -106,51 +122,70 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/_20sdp"
-            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_8sdp"
             android:fontFamily="@font/poppins_medium"
-            android:text="@string/change_password"
             android:padding="@dimen/_5sdp"
-            android:textSize="@dimen/_14sdp"
+            android:visibility="gone"
+            android:background="?attr/selectableItemBackground"
+            android:text="@string/change_password"
             android:textAllCaps="true"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:textSize="@dimen/_14sdp" />
 
         <TextView
             android:id="@+id/btnCompAccount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/_20sdp"
-            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_8sdp"
             android:fontFamily="@font/poppins_medium"
-            android:text="@string/comp_acounts"
+            android:background="?attr/selectableItemBackground"
             android:padding="@dimen/_5sdp"
-            android:textSize="@dimen/_14sdp"
+            android:text="@string/comp_acounts"
             android:textAllCaps="true"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:textSize="@dimen/_14sdp" />
+
+        <TextView
+            android:id="@+id/btnChngLang"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:fontFamily="@font/poppins_medium"
+            android:padding="@dimen/_5sdp"
+            android:background="?attr/selectableItemBackground"
+            android:text="@string/change_language"
+            android:textAllCaps="true"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_14sdp" />
 
         <TextView
             android:id="@+id/btnSupport"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/_20sdp"
-            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_8sdp"
             android:fontFamily="@font/poppins_medium"
-            android:text="@string/support"
             android:padding="@dimen/_5sdp"
-            android:textSize="@dimen/_14sdp"
+            android:background="?attr/selectableItemBackground"
+            android:text="@string/support"
             android:textAllCaps="true"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:textSize="@dimen/_14sdp" />
 
         <TextView
             android:id="@+id/tvLogout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/_20sdp"
-            android:layout_marginTop="@dimen/_50sdp"
+            android:layout_marginTop="@dimen/_30sdp"
             android:fontFamily="@font/poppins_medium"
             android:text="@string/locgout"
-            android:textSize="@dimen/_15sdp"
+            android:background="?attr/selectableItemBackground"
             android:textAllCaps="true"
-            android:textColor="@color/black" />
+            android:textColor="@color/black"
+            android:textSize="@dimen/_15sdp" />
 
     </LinearLayout>
 </layout>

@@ -32,7 +32,8 @@ public class AdapterSupports extends RecyclerView.Adapter<AdapterSupports.Suppor
     @NotNull
     @Override
     public SupportView onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-        AdapterSupportsBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mContext),R.layout.adapter_supports,parent,false);
+        AdapterSupportsBinding binding = DataBindingUtil.inflate(LayoutInflater.from(mContext),
+                R.layout.adapter_supports,parent,false);
         return new SupportView(binding);
     }
 

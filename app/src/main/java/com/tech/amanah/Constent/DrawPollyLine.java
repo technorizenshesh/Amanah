@@ -21,36 +21,36 @@ public class DrawPollyLine {
     private Context context;
     private LatLng origin;
     private LatLng destination;
-    List<List<HashMap<String, String>>> routes=new ArrayList<>();
-    ArrayList<LatLng> points=new ArrayList<>();
+    List<List<HashMap<String, String>>> routes = new ArrayList<>();
+    ArrayList<LatLng> points = new ArrayList<>();
     private PolylineOptions lineOptions;
 
     public DrawPollyLine(Context context) {
-        this.context=context;
+        this.context = context;
     }
 
     public static DrawPollyLine get(Context context) {
         return new DrawPollyLine(context);
     }
 
-    public DrawPollyLine setOrigin(LatLng origin){
-        this.origin=origin;
+    public DrawPollyLine setOrigin(LatLng origin) {
+        this.origin = origin;
         return this;
     }
 
-    public DrawPollyLine setDestination(LatLng destination){
-        this.destination=destination;
+    public DrawPollyLine setDestination(LatLng destination) {
+        this.destination = destination;
         return this;
     }
 
     public void execute(onPolyLineResponse listener) {
-        String URL=BaseClass.get().getPolyLineUrl(context,origin,destination);
+        String URL = BaseClass.get().getPolyLineUrl(context, origin, destination);
         ApiCallBuilder.build(context)
                 .setUrl(URL).execute(new ApiCallBuilder.onResponse() {
             @Override
             public void Success(String response) {
                 try {
-                    JSONObject object=new JSONObject(response);
+                    JSONObject object = new JSONObject(response);
                     DataParser parser = new DataParser();
                     routes = parser.parse(object);
                     for (int i = 0; i < routes.size(); i++) {
@@ -83,8 +83,9 @@ public class DrawPollyLine {
             }
         });
     }
-    public interface onPolyLineResponse{
-        void Success(ArrayList<LatLng>latLngs);
+
+    public interface onPolyLineResponse {
+        void Success(ArrayList<LatLng> latLngs);
     }
 
 }

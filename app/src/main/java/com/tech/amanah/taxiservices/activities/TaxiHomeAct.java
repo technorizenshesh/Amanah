@@ -1,5 +1,7 @@
 package com.tech.amanah.taxiservices.activities;
 
+import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +12,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -18,9 +21,12 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Looper;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -31,6 +37,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -39,6 +51,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.libraries.places.api.Places;
@@ -54,6 +67,9 @@ import com.squareup.picasso.Picasso;
 import com.tech.amanah.Constent.BaseClass;
 import com.tech.amanah.Constent.DrawPollyLine;
 import com.tech.amanah.R;
+import com.tech.amanah.Utils.AppConstant;
+import com.tech.amanah.Utils.LatLngInterpolator;
+import com.tech.amanah.Utils.MarkerAnimation;
 import com.tech.amanah.Utils.SessionManager;
 import com.tech.amanah.Utils.SharedPref;
 import com.tech.amanah.activities.LoginActivity;
@@ -93,122 +109,160 @@ public class TaxiHomeAct extends AppCompatActivity implements OnMapReadyCallback
     GPSTracker gpsTracker;
     Context mContext = TaxiHomeAct.this;
     int PERMISSION_ID = 44;
-    private SessionManager session;
     List<Place.Field> placeFields = Arrays.asList(Place.Field.LAT_LNG, Place.Field.ADDRESS);
     private PlacesClient placesClient;
     private static final String TAG = "HomeAct";
-    private LatLng PickUpLatLng,DropOffLatLng;
-    private MarkerOptions PicUpMarker,DropOffMarker;
-    private boolean isAddedMarker2=false,isAddedMarker1=false;
+    private LatLng PickUpLatLng, DropOffLatLng;
+    Marker pickupMarker, dropOffMarker;
+    private MarkerOptions PicUpMarker, DropOffMarker;
+    private boolean isAddedMarker2 = false, isAddedMarker1 = false;
     private PolylineOptions lineOptions;
     SharedPref sharedPref;
     ModelLogin modelLogin;
     private ScheduledExecutorService scheduleTaskExecutor;
-    public static String pickUpAddress = null,dropOffAddress = null;
+    public static String pickUpAddress = null, dropOffAddress = null;
+    private LocationRequest mLocationRequest;
+    private long UPDATE_INTERVAL = 2000;  /* 5 secs */
+    private long FASTEST_INTERVAL = 2000; /* 2 sec */
+    Location currentLocation;
+    private SupportMapFragment mapFragment;
+    private Marker currentLocationMarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // setContentView(R.layout.activity_home);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_taxiapp_home);
-        session = SessionManager.get(this);
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
-        // BindData();
+        sharedPref = SharedPref.getInstance(mContext);
+        startLocationUpdates();
+        modelLogin = sharedPref.getUserDetails(AppConstant.USER_DETAILS);
+        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(TaxiHomeAct.this);
+        BindData();
         initViews();
-
+        getNearDriver();
     }
 
     private void BindData() {
 
-        gpsTracker = new GPSTracker(TaxiHomeAct.this);
-
-        if(pickUpAddress == null) {
-            PickUpLatLng = new LatLng(gpsTracker.getLatitude(),gpsTracker.getLongitude());
-            binding.tvFrom.setText(Tools.getCompleteAddressString(this,gpsTracker.getLatitude(),gpsTracker.getLongitude()));
-        }
-
-        session = SessionManager.get(this);
-
-        Log.e("UserDetails","==>" + session.getAllDetails());
-
         binding.childNavDrawer.tvUsername.setText(modelLogin.getResult().getUser_name());
         binding.childNavDrawer.tvEmail.setText(modelLogin.getResult().getEmail());
 
-        Picasso.get().load(session.getValue().getImage()).placeholder(R.drawable.user_ic)
-                .into(binding.childNavDrawer.ivProfileImage);
+    }
 
+    // Trigger new location updates at interval
+    @SuppressLint("MissingPermission")
+    protected void startLocationUpdates() {
+
+        // Create the location request to start receiving updates
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setInterval(UPDATE_INTERVAL);
+        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+
+        // Create LocationSettingsRequest object using location request
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+        builder.addLocationRequest(mLocationRequest);
+        LocationSettingsRequest locationSettingsRequest = builder.build();
+
+        SettingsClient settingsClient = LocationServices.getSettingsClient(TaxiHomeAct.this);
+        settingsClient.checkLocationSettings(locationSettingsRequest);
+
+        // New Google API SDK V11 Uses GetFusedLocationProviderClient(this)
+        if (ActivityCompat.checkSelfPermission(TaxiHomeAct.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(TaxiHomeAct.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+        getFusedLocationProviderClient(TaxiHomeAct.this)
+                .requestLocationUpdates(mLocationRequest, new LocationCallback() {
+                    @Override
+                    public void onLocationResult(LocationResult locationResult) {
+                        if (locationResult != null) {
+                            Log.e("hdasfkjhksdf", "StartLocationUpdate = " + locationResult.getLastLocation());
+                            currentLocation = locationResult.getLastLocation();
+                            showMarkerCurrentLocation(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
+                        }
+                    }
+                }, Looper.myLooper());
+
+    }
+
+    private void showMarkerCurrentLocation(@NonNull LatLng currentLocation) {
+        if (currentLocation != null) {
+            if (currentLocationMarker == null) {
+                if (mMap != null) {
+                    if (TextUtils.isEmpty(binding.tvFrom.getText().toString().trim())) {
+                        if (currentLocation != null) {
+                            PickUpLatLng = new LatLng(currentLocation.latitude, currentLocation.longitude);
+                            binding.tvFrom.setText(Tools.getCompleteAddressString(this, currentLocation.latitude, currentLocation.longitude));
+                        }
+                    }
+                    currentLocationMarker = mMap.addMarker(new MarkerOptions().position(currentLocation).title("PickUp location")
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.blue_marker)));
+                    animateCamera(currentLocation);
+                }
+            } else {
+                Log.e("sdfdsfdsfds", "Hello Marker Anuimation");
+                MarkerAnimation.animateMarkerToGB(currentLocationMarker, currentLocation, new LatLngInterpolator.Spherical());
+            }
+        }
+    }
+
+    private void animateCamera(@NonNull LatLng location) {
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(getCameraPositionWithBearing(location)));
     }
 
     private void initViews() {
 
         placesClient = Places.createClient(this);
 
-        PicUpMarker=new MarkerOptions().title("Pick Up Location")
+        PicUpMarker = new MarkerOptions().title("Pick Up Location")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.blue_marker));
-        DropOffMarker=new MarkerOptions().title("Drop Off Location")
+        DropOffMarker = new MarkerOptions().title("Drop Off Location")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.blue_marker));
 
         binding.ivMenu.setOnClickListener(v -> {
-            navmenu();
+            binding.drawer.openDrawer(GravityCompat.START);
         });
 
         binding.childNavDrawer.btnProfile.setOnClickListener(v -> {
+            binding.drawer.closeDrawer(GravityCompat.START);
             startActivity(new Intent(this, ProfileActivity.class));
         });
-
-        binding.childNavDrawer.btnHistory.setOnClickListener(v -> {
-            // startActivity(new Intent(this, RideHistoryActivity.class));
-        });
-
-//        binding.childNavDrawer.btnPayment.setOnClickListener(v -> {
-//            startActivity(new Intent(this, CardAdded.class));
-//        });
-//
-//        binding.childNavDrawer.btnPromocode.setOnClickListener(v -> {
-//            startActivity(new Intent(this, PromoCodeActivity.class));
-//        });
 
         binding.childNavDrawer.btnSupport.setOnClickListener(v -> {
             // startActivity(new Intent(this, SupportActivity.class));
         });
 
-//        binding.childNavDrawer.btnWallet.setOnClickListener(v -> {
-//            // startActivity(new Intent(this, WalletAct.class));
-//        });
-
         binding.childNavDrawer.tvLogout.setOnClickListener(v -> {
-            session.Logout();
             sharedPref.clearAllPreferences();
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         });
 
+        binding.childNavDrawer.btnHistory.setOnClickListener(v -> {
+            binding.drawer.closeDrawer(GravityCompat.START);
+            startActivity(new Intent(this, RideHistoryActivity.class));
+        });
+
         binding.btnNext.setOnClickListener(v -> {
 
-//            if (PickUpLatLng == null) {
-//                Toast.makeText(this, "Please select Pickup Location", Toast.LENGTH_SHORT).show();
-//                return;
-//            }
-//
-//            if (DropOffLatLng == null) {
-//                Toast.makeText(this, "Please select Dropoff Location", Toast.LENGTH_SHORT).show();
-//                return;
-//            }
-//
-//            Intent intent = new Intent(this, RideOptionActivity.class);
-//            intent.putExtra("pollyLine",lineOptions);
-//            intent.putExtra("PickUp",PickUpLatLng);
-//            intent.putExtra("DropOff",DropOffLatLng);
-//            startActivity(intent);
+            if (PickUpLatLng == null) {
+                Toast.makeText(this, "Please select Pickup Location", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-            Intent intent = new Intent(this, RideOptionActivity.class);
-//            intent.putExtra("pollyLine",lineOptions);
-//            intent.putExtra("PickUp",PickUpLatLng);
-//            intent.putExtra("DropOff",DropOffLatLng);
-            startActivity(intent);
+            if (DropOffLatLng == null) {
+                Intent intent = new Intent(this, RideOptionActivity.class);
+                intent.putExtra("PickUp", PickUpLatLng);
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(this, RideOptionActivity.class);
+                intent.putExtra("pollyLine", lineOptions);
+                intent.putExtra("PickUp", PickUpLatLng);
+                intent.putExtra("DropOff", DropOffLatLng);
+                startActivity(intent);
+            }
 
         });
 
@@ -243,14 +297,19 @@ public class TaxiHomeAct extends AppCompatActivity implements OnMapReadyCallback
         mMap = googleMap;
 //        if (checkPermissions()) {
 //            if (isLocationEnabled()) {
-//                PicUpMarker.position(new LatLng(gpsTracker.getLatitude(),gpsTracker.getLongitude()));
-//                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(getCameraPositionWithBearing(PickUpLatLng)));
-//                if (!isAddedMarker1) {
-//                    mMap.addMarker(PicUpMarker);
-//                    isAddedMarker1 = true;
+//                if(currentLocation != null) {
+//                    Log.e("sadasdasdasd","currentLocation = " + currentLocation.getLatitude() + ","
+//                            + currentLocation.getLongitude());
+//                    PicUpMarker.position(new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude()));
+//                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(getCameraPositionWithBearing(PickUpLatLng)));
+//                    if (!isAddedMarker1) {
+//                        Log.e("isAddedMarker1","isAddedMarker1 = " + isAddedMarker1);
+//                        pickupMarker = mMap.addMarker(PicUpMarker);
+//                        isAddedMarker1 = true;
+//                    }
 //                }
 //            } else {
-//                Toast.makeText(this, "Turn on location", Toast.LENGTH_LONG).show();
+//                Toast.makeText(this,"Turn on location", Toast.LENGTH_LONG).show();
 //                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 //                startActivity(intent);
 //            }
@@ -266,36 +325,36 @@ public class TaxiHomeAct extends AppCompatActivity implements OnMapReadyCallback
             if (resultCode == RESULT_OK) {
                 Place place = Autocomplete.getPlaceFromIntent(data);
                 PickUpLatLng = place.getLatLng();
-                binding.tvFrom.setText(Tools.getCompleteAddressString(mContext,PickUpLatLng.latitude,PickUpLatLng.longitude));
-                if (PickUpLatLng!=null) {
+                binding.tvFrom.setText(Tools.getCompleteAddressString(mContext, PickUpLatLng.latitude, PickUpLatLng.longitude));
+                if (PickUpLatLng != null) {
                     PicUpMarker.position(PickUpLatLng);
                     mMap.animateCamera(CameraUpdateFactory.newCameraPosition(getCameraPositionWithBearing(PickUpLatLng)));
                     if (!isAddedMarker1) {
                         mMap.addMarker(PicUpMarker);
-                        isAddedMarker1=true;
+                        isAddedMarker1 = true;
                     }
                 }
-                if (PickUpLatLng!=null&DropOffLatLng!=null) {
+                if (PickUpLatLng != null & DropOffLatLng != null) {
                     DrawPolyLine();
                 }
             }
-        } else if(requestCode == 1003) {
-//            if (resultCode == RESULT_OK) {
-//                Place place = Autocomplete.getPlaceFromIntent(data);
-//                DropOffLatLng = place.getLatLng();
-//                binding.tvDestination.setText(Tools.getCompleteAddressString(mContext,DropOffLatLng.latitude,DropOffLatLng.longitude));
-//                if (DropOffLatLng!=null) {
-//                    PicUpMarker.position(DropOffLatLng);
-//                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(getCameraPositionWithBearing(DropOffLatLng)));
-//                    if (!isAddedMarker1) {
-//                        mMap.addMarker(PicUpMarker);
-//                        isAddedMarker1=true;
-//                    }
-//                }
-//                if (PickUpLatLng!=null&DropOffLatLng!=null) {
-//                    DrawPolyLine();
-//                }
-//            }
+        } else if (requestCode == 1003) {
+            if (resultCode == RESULT_OK) {
+                Place place = Autocomplete.getPlaceFromIntent(data);
+                DropOffLatLng = place.getLatLng();
+                binding.tvDestination.setText(Tools.getCompleteAddressString(mContext, DropOffLatLng.latitude, DropOffLatLng.longitude));
+                if (DropOffLatLng != null) {
+                    PicUpMarker.position(DropOffLatLng);
+                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(getCameraPositionWithBearing(DropOffLatLng)));
+                    if (!isAddedMarker1) {
+                        mMap.addMarker(PicUpMarker);
+                        isAddedMarker1 = true;
+                    }
+                }
+                if (PickUpLatLng != null & DropOffLatLng != null) {
+                    DrawPolyLine();
+                }
+            }
         }
 
     }
@@ -303,29 +362,22 @@ public class TaxiHomeAct extends AppCompatActivity implements OnMapReadyCallback
     @Override
     protected void onResume() {
         super.onResume();
-//        if (session.getUserID().isEmpty()) {
-//            DialogMessage.get(this).setMessage(getString(R.string.session_expire)).Callback(()->{
-//                session.Logout();
-//                startActivity(new Intent(this,LoginActivity.class));
-//                finish();
-//            }).show();
-//        }
-//        getProfile();
-//        BindExecutor();
-//        getNearDriver();
-//        getCurrentBooking();
+        getProfile();
+        BindExecutor();
+        getNearDriver();
+        getCurrentBooking();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-//        scheduleTaskExecutor.shutdownNow();
+        scheduleTaskExecutor.shutdownNow();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-       // scheduleTaskExecutor.shutdownNow();
+        scheduleTaskExecutor.shutdownNow();
     }
 
     private void BindExecutor() {
@@ -339,8 +391,8 @@ public class TaxiHomeAct extends AppCompatActivity implements OnMapReadyCallback
 
     @NonNull
     private CameraPosition getCameraPositionWithBearing(LatLng latLng) {
-        if (latLng==null) {
-            latLng=new LatLng(gpsTracker.getLatitude(),gpsTracker.getLongitude());
+        if (latLng == null) {
+            latLng = new LatLng(gpsTracker.getLatitude(), gpsTracker.getLongitude());
         }
         return new CameraPosition.Builder().target(latLng).zoom(16).build();
     }
@@ -363,9 +415,9 @@ public class TaxiHomeAct extends AppCompatActivity implements OnMapReadyCallback
 
     private boolean isLocationEnabled() {
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
-                LocationManager.NETWORK_PROVIDER
-        );
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER
+                );
     }
 
     @Override
@@ -383,17 +435,18 @@ public class TaxiHomeAct extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
-    private void getProfile(){
-        HashMap<String,String> param=new HashMap<>();
-        param.put("user_id",session.getUserID());
+    private void getProfile() {
+        HashMap<String, String> param = new HashMap<>();
+        param.put("user_id", modelLogin.getResult().getId());
         ApiCallBuilder.build(this).setUrl(BaseClass.get().getProfile())
                 .setParam(param).execute(new ApiCallBuilder.onResponse() {
             @Override
             public void Success(String response) {
                 try {
-                    JSONObject object=new JSONObject(response);
-                    if (object.getString("status").equals("1")){
-                        session.CreateSession(object.getString("result"));
+                    JSONObject object = new JSONObject(response);
+                    if (object.getString("status").equals("1")) {
+
+                        // session.CreateSession(object.getString("result"));
                         BindData();
                     }
                 } catch (JSONException e) {
@@ -404,49 +457,6 @@ public class TaxiHomeAct extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void Failed(String error) {
 
-            }
-        });
-    }
-
-    private void FindLatLng(int type,String placeId) {
-        FetchPlaceRequest request = FetchPlaceRequest.builder(placeId, placeFields)
-                .build();
-        placesClient.fetchPlace(request).addOnSuccessListener((response) -> {
-            Place place = response.getPlace();
-            Log.i(TAG, "Place found: " + place.getName());
-            if (type==1){
-                binding.tvFrom.setText(place.getAddress());
-                PickUpLatLng=place.getLatLng();
-                if (PickUpLatLng!=null) {
-                    PicUpMarker.position(PickUpLatLng);
-                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(getCameraPositionWithBearing(PickUpLatLng)));
-                    if (!isAddedMarker1) {
-                        mMap.addMarker(PicUpMarker);
-                        isAddedMarker1=true;
-                    }
-                }
-            }
-            if (type==2) {
-                binding.tvDestination.setText(place.getAddress());
-                DropOffLatLng=place.getLatLng();
-                if (DropOffLatLng!=null){
-                    DropOffMarker.position(DropOffLatLng);
-                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(getCameraPositionWithBearing(DropOffLatLng)));
-                    if (!isAddedMarker2) {
-                        isAddedMarker2=true;
-                        mMap.addMarker(DropOffMarker);
-                    }
-                }
-            }
-            if (PickUpLatLng!=null&DropOffLatLng!=null) {
-                DrawPolyLine();
-            }
-        }).addOnFailureListener((exception) -> {
-            if (exception instanceof ApiException) {
-                ApiException apiException = (ApiException) exception;
-                int statusCode = apiException.getStatusCode();
-                // Handle error with given status code.
-                Log.e(TAG, "Place not found: " + exception.getMessage());
             }
         });
     }
@@ -480,49 +490,54 @@ public class TaxiHomeAct extends AppCompatActivity implements OnMapReadyCallback
     }
 
     public void AddDefaultMarker() {
-        if (mMap!=null) {
+        if (mMap != null) {
             mMap.clear();
-            if (lineOptions!=null)
+            if (lineOptions != null)
                 mMap.addPolyline(lineOptions);
-            if (PickUpLatLng!=null) {
+            if (PickUpLatLng != null) {
                 PicUpMarker.position(PickUpLatLng);
                 mMap.addMarker(PicUpMarker);
                 mMap.animateCamera(CameraUpdateFactory.newCameraPosition(getCameraPositionWithBearing(PickUpLatLng)));
             }
-            if (DropOffLatLng!=null) {
+            if (DropOffLatLng != null) {
                 DropOffMarker.position(DropOffLatLng);
                 mMap.addMarker(DropOffMarker);
             }
         }
-        zoomMapInitial(PickUpLatLng,DropOffLatLng);
+        zoomMapInitial(PickUpLatLng, DropOffLatLng);
     }
 
     private void getNearDriver() {
 
-        if (PickUpLatLng==null) {
+        if (PickUpLatLng == null) {
             return;
         }
-        HashMap<String,String>param=new HashMap<>();
-        param.put("latitude","" + PickUpLatLng.latitude);
-        param.put("longitude","" + PickUpLatLng.longitude);
-        param.put("user_id",session.getUserID());
+
+        HashMap<String, String> param = new HashMap<>();
+        param.put("latitude", "" + PickUpLatLng.latitude);
+        param.put("longitude", "" + PickUpLatLng.longitude);
+        param.put("user_id", modelLogin.getResult().getId());
         param.put("timezone", Tools.get().getTimeZone());
+
+        Log.e("getNearDriver", "getNearDriver = " + param);
+
         ApiCallBuilder.build(this).setUrl(BaseClass.get().getNearAllDriver())
                 .setParam(param).execute(new ApiCallBuilder.onResponse() {
             @Override
             public void Success(String response) {
-                Log.e("NearBy",response);
+                Log.e("NearBy", response);
                 try {
-                    JSONObject object=new JSONObject(response);
-                    if (object.getString("status").equals("1")){
-                        Type listType = new TypeToken<ArrayList<ModelAvailableDriver>>() {}.getType();
+                    JSONObject object = new JSONObject(response);
+                    if (object.getString("status").equals("1")) {
+                        Type listType = new TypeToken<ArrayList<ModelAvailableDriver>>() {
+                        }.getType();
                         ArrayList<ModelAvailableDriver> drivers = new GsonBuilder().create().fromJson(object.getString("result"), listType);
-                        if (mMap!=null) {
+                        if (mMap != null) {
                             AddDefaultMarker();
                             for (ModelAvailableDriver driver : drivers) {
-                                MarkerOptions car=new MarkerOptions()
-                                        .position(new LatLng(Double.valueOf(driver.getLat()),Double.valueOf(driver.getLon())))
-                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.car_top));
+                                MarkerOptions car = new MarkerOptions()
+                                        .position(new LatLng(Double.valueOf(driver.getLat()), Double.valueOf(driver.getLon())))
+                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.car_top)).title(driver.getName());
                                 mMap.addMarker(car);
                             }
                         }
@@ -531,16 +546,16 @@ public class TaxiHomeAct extends AppCompatActivity implements OnMapReadyCallback
                     e.printStackTrace();
                 }
             }
-            @Override
-            public void Failed(String error) {
 
-            }
+            @Override
+            public void Failed(String error) {}
+
         });
     }
 
-    private void getCurrentBooking(){
-        HashMap<String,String>param=new HashMap<>();
-        param.put("user_id", session.getUserID());
+    private void getCurrentBooking() {
+        HashMap<String, String> param = new HashMap<>();
+        param.put("user_id", modelLogin.getResult().getId());
         param.put("type", "USER");
         param.put("timezone", Tools.get().getTimeZone());
         ApiCallBuilder.build(this).setUrl(BaseClass.get().getCurrentBooking())
@@ -549,30 +564,32 @@ public class TaxiHomeAct extends AppCompatActivity implements OnMapReadyCallback
                     @Override
                     public void Success(String response) {
                         try {
-                            JSONObject object=new JSONObject(response);
-                            if (object.getString("status").equals("1")){
-                                Type listType = new TypeToken<ModelCurrentBooking>(){}.getType();
+                            JSONObject object = new JSONObject(response);
+                            if (object.getString("status").equals("1")) {
+                                Log.e("getCurrentBooking", "getCurrentBooking = " + response);
+                                Type listType = new TypeToken<ModelCurrentBooking>() {
+                                }.getType();
                                 ModelCurrentBooking data = new GsonBuilder().create().fromJson(response, listType);
                                 if (data.getStatus().equals(1)) {
-                                    ModelCurrentBookingResult result=data.getResult().get(0);
+                                    ModelCurrentBookingResult result = data.getResult().get(0);
                                     if (result.getStatus().equalsIgnoreCase("Pending")) {
-                                        DialogSearchingDriver.get(TaxiHomeAct.this).Callback(TaxiHomeAct.this).show();
-                                    }else if (result.getStatus().equalsIgnoreCase("Accept")) {
+                                        //  DialogSearchingDriver.get(TaxiHomeAct.this).Callback(TaxiHomeAct.this).show();
+                                    } else if (result.getStatus().equalsIgnoreCase("Accept")) {
                                         Intent k = new Intent(TaxiHomeAct.this, TrackActivity.class);
-                                        k.putExtra("data",data);
+                                        k.putExtra("data", data);
                                         startActivity(k);
                                     } else if (result.getStatus().equalsIgnoreCase("Arrived")) {
                                         Intent j = new Intent(TaxiHomeAct.this, TrackActivity.class);
-                                        j.putExtra("data",data);
+                                        j.putExtra("data", data);
                                         startActivity(j);
                                     } else if (result.getStatus().equalsIgnoreCase("Start")) {
                                         Intent j = new Intent(TaxiHomeAct.this, TrackActivity.class);
-                                        j.putExtra("data",data);
+                                        j.putExtra("data", data);
                                         startActivity(j);
                                     } else if (result.getStatus().equalsIgnoreCase("End")) {
-                                        Intent j = new Intent(TaxiHomeAct.this, PaymentSummary.class);
-                                        j.putExtra("data",data);
-                                        startActivity(j);
+//                                      Intent j = new Intent(TaxiHomeAct.this, PaymentSummary.class);
+//                                      j.putExtra("data",data);
+//                                      startActivity(j);
                                     }
                                 }
                             }
@@ -590,14 +607,14 @@ public class TaxiHomeAct extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void onRequestAccepted(ModelCurrentBooking data) {
-        DialogMessage.get(this).setMessage("Your request accepted successfully!").Callback(()->{
+        DialogMessage.get(this).setMessage("Your request accepted successfully!").Callback(() -> {
 
         }).show();
     }
 
     @Override
     public void onRequestCancel() {
-        DialogMessage.get(this).setMessage("Your request has been canceled.").Callback(()->finish()).show();
+        DialogMessage.get(this).setMessage("Your request has been canceled.").Callback(() -> finish()).show();
     }
 
     @Override

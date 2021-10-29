@@ -54,6 +54,8 @@ public class ModelLogin implements Serializable {
 
         private String mobile;
 
+        private String profile_image;
+
         private String nxn_point;
 
         private String online_status;
@@ -66,6 +68,8 @@ public class ModelLogin implements Serializable {
 
         private String name;
 
+        private String vehicle_number;
+
         private String register_id;
 
         private String screen_count;
@@ -77,6 +81,23 @@ public class ModelLogin implements Serializable {
         private String user_name;
 
         private String wallet;
+
+
+        public String getVehicle_number() {
+            return vehicle_number;
+        }
+
+        public void setVehicle_number(String vehicle_number) {
+            this.vehicle_number = vehicle_number;
+        }
+
+        public String getProfile_image() {
+            return profile_image;
+        }
+
+        public void setProfile_image(String profile_image) {
+            this.profile_image = profile_image;
+        }
 
         public String getName() {
             return name;

@@ -16,15 +16,12 @@ public class SharedPref {
     public SharedPref() {}
 
     public static SharedPref getInstance(Context context) {
-
         if (myObj == null) {
             myObj = new SharedPref();
             myPrefs = PreferenceManager.getDefaultSharedPreferences(context);
             myPrefsEditor = myPrefs.edit();
         }
-
         return myObj;
-
     }
 
     public void setlanguage(String key, String value) {

@@ -6,23 +6,38 @@ import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.database.Cursor;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+
+import androidx.core.content.FileProvider;
+import androidx.loader.content.CursorLoader;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.model.LatLng;
+import com.tech.amanah.BuildConfig;
 import com.tech.amanah.R;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class ProjectUtil {
 
@@ -35,6 +50,85 @@ public class ProjectUtil {
         mProgressDialog.show();
         mProgressDialog.setCancelable(isCancelable);
         return mProgressDialog;
+    }
+
+    public static void openGallery(Context mContext, int GALLERY) {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/*");
+        ((Activity) mContext).startActivityForResult(Intent.createChooser(intent, "Select Image"), GALLERY);
+    }
+
+    public static String openCamera(Context mContext, int CAMERA) {
+
+        File dirtostoreFile = new File(Environment.getExternalStorageDirectory() + "/amanah/Images/");
+
+        if (!dirtostoreFile.exists()) {
+            dirtostoreFile.mkdirs();
+        }
+
+        String timestr = convertDateToString(Calendar.getInstance().getTimeInMillis());
+
+        File tostoreFile = new File(Environment.getExternalStorageDirectory() + "/amanah/Images/" + "IMG_" + timestr + ".jpg");
+
+        String str_image_path = tostoreFile.getPath();
+
+        Uri uriSavedImage = FileProvider.getUriForFile(Objects.requireNonNull(((Activity) mContext)),
+                BuildConfig.APPLICATION_ID + ".provider", tostoreFile);
+
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uriSavedImage);
+        ((Activity) mContext).startActivityForResult(intent, CAMERA);
+
+        return str_image_path;
+
+    }
+
+    public static String convertDateToString(long l) {
+        String str = "";
+        Date date = new Date(l);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd_MM_yyyy_HH_mm_ss");
+        str = dateFormat.format(date);
+        return str;
+    }
+
+    public static String getRealPathFromURI(Context mContext, Uri contentUri) {
+        // TODO: get realpath from uri
+        String stringPath = null;
+        try {
+            if (contentUri.getScheme().toString().compareTo("content") == 0) {
+                String[] proj = {MediaStore.Images.Media.DATA};
+                CursorLoader loader = new CursorLoader(((Activity) mContext), contentUri, proj, null, null, null);
+                Cursor cursor = loader.loadInBackground();
+                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                cursor.moveToFirst();
+                stringPath = cursor.getString(column_index);
+                cursor.close();
+            } else if (contentUri.getScheme().compareTo("file") == 0) {
+                stringPath = contentUri.getPath();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return stringPath;
+
+    }
+
+    public static void blinkAnimation(View view){
+        Animation anim = new AlphaAnimation(0.0f, 1.0f);
+        anim.setDuration(50);
+        anim.setStartOffset(20);
+        anim.setRepeatMode(Animation.REVERSE);
+        view.startAnimation(anim);
+    }
+
+    public static void updateResources(Context context, String language) {
+        Locale locale = new Locale(language);
+        Locale.setDefault(locale);
+        Resources resources = context.getResources();
+        Configuration configuration = resources.getConfiguration();
+        configuration.locale = locale;
+        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
     }
 
     public static void clearNortifications(Context mContext) {

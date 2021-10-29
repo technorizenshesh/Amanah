@@ -4,11 +4,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -18,11 +21,14 @@ import com.tech.amanah.Utils.ProjectUtil;
 import com.tech.amanah.Utils.SharedPref;
 import com.tech.amanah.Utils.retrofitutils.Api;
 import com.tech.amanah.Utils.retrofitutils.ApiFactory;
+import com.tech.amanah.activities.LoginActivity;
 import com.tech.amanah.databinding.ActivityMyCartBinding;
+import com.tech.amanah.databinding.PromoCodeDialogBinding;
 import com.tech.amanah.devliveryservices.adapters.AdapterMyCart;
 import com.tech.amanah.devliveryservices.models.ModelMyStoreCart;
 import com.tech.amanah.taxiservices.models.ModelLogin;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -45,11 +51,12 @@ public class MyCartActivity extends AppCompatActivity {
     String storeAmountString = "";
     String storeId = null;
     double itemTotal = 0.0;
+    boolean isCodeApplied = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this,R.layout.activity_my_cart);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_my_cart);
         sharedPref = SharedPref.getInstance(mContext);
         modelLogin = sharedPref.getUserDetails(AppConstant.USER_DETAILS);
         itit();
@@ -59,6 +66,10 @@ public class MyCartActivity extends AppCompatActivity {
 
         binding.ivBack.setOnClickListener(v -> {
             finish();
+        });
+
+        binding.btAdd.setOnClickListener(v -> {
+            addPromoCodeDialog();
         });
 
         binding.swipLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -72,25 +83,25 @@ public class MyCartActivity extends AppCompatActivity {
 
         binding.btCheckout.setOnClickListener(v -> {
 
-            if(itemTotal != 0.0) {
-                if(builder == null || builder.length() == 0) {
+            if (itemTotal != 0.0) {
+                if (builder == null || builder.length() == 0) {
                     Toast.makeText(mContext, getString(R.string.please_add_items_in_cart), Toast.LENGTH_SHORT).show();
                 } else {
-                    HashMap<String,String> params = new HashMap<>();
+                    HashMap<String, String> params = new HashMap<>();
 
                     String currentDate = ProjectUtil.getCurrentDate();
                     String currentTime = ProjectUtil.getCurrentTime();
 
-                    params.put("user_id",modelLogin.getResult().getId());
-                    params.put("cart_id",builder.toString());
-                    params.put("shop_id",builderStore.toString());
-                    params.put("book_date",currentDate);
-                    params.put("book_time",currentTime);
-                    params.put("amount",storeAmountString);
-                    params.put("amounttotal",String.valueOf(itemTotal));
+                    params.put("user_id", modelLogin.getResult().getId());
+                    params.put("cart_id", builder.toString());
+                    params.put("shop_id", builderStore.toString());
+                    params.put("book_date", currentDate);
+                    params.put("book_time", currentTime);
+                    params.put("amount", storeAmountString);
+                    params.put("amounttotal", String.valueOf(itemTotal));
 
-                    startActivity(new Intent(mContext,SetDeliveryLocationActivity.class)
-                            .putExtra(AppConstant.STORE_BOOKING_PARAMS,params)
+                    startActivity(new Intent(mContext, SetDeliveryLocationActivity.class)
+                            .putExtra(AppConstant.STORE_BOOKING_PARAMS, params)
                     );
 
                 }
@@ -105,17 +116,99 @@ public class MyCartActivity extends AppCompatActivity {
         // getCartApiCall();
     }
 
+    private void addPromoCodeDialog() {
+
+        Dialog dialog = new Dialog(mContext, WindowManager.LayoutParams.MATCH_PARENT);
+        PromoCodeDialogBinding dialogBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext),
+                R.layout.promo_code_dialog, null, false);
+        dialog.setContentView(dialogBinding.getRoot());
+
+        dialogBinding.btnApply.setOnClickListener(v -> {
+            if (TextUtils.isEmpty(dialogBinding.etCode.getText().toString().trim())) {
+                Toast.makeText(mContext, getString(R.string.please_enter_code), Toast.LENGTH_SHORT).show();
+            } else {
+                applyCodeApi(dialogBinding.etCode.getText().toString().trim(), dialog);
+            }
+        });
+
+        dialog.getWindow().setBackgroundDrawableResource(R.color.translucent_black);
+        dialog.show();
+
+    }
+
+    private void applyCodeApi(String code, Dialog dialog) {
+        ProjectUtil.showProgressDialog(mContext, false, getString(R.string.please_wait));
+
+        HashMap<String, String> paramHash = new HashMap<>();
+        paramHash.put("user_id", modelLogin.getResult().getId());
+        paramHash.put("code", code);
+
+        Log.e("paramHashparamHash", "paramHash = " + paramHash);
+
+        Api api = ApiFactory.getClientWithoutHeader(mContext).create(Api.class);
+        Call<ResponseBody> call = api.applyPromoCode(paramHash);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                ProjectUtil.pauseProgressDialog();
+                try {
+                    String stringResponse = response.body().string();
+                    JSONObject jsonObject = new JSONObject(stringResponse);
+
+                    dialog.dismiss();
+                    Log.e("asfddasfasdf", "stringResponse = " + stringResponse);
+
+                    if (jsonObject.getString("status").equals("1")) {
+
+                        JSONObject resultJson = jsonObject.getJSONObject("result");
+
+                        Log.e("asdasdasdasd", "resultJson.getString(\"amount\") = " + resultJson.getString("amount"));
+                        Log.e("asdasdasdasd", "parseDouble = " + (Double.parseDouble(resultJson.getString("amount")) / 100));
+
+                        if ("PERCENT".equalsIgnoreCase(resultJson.getString("type"))) {
+                            double totalDiscountInPrice = itemTotal * (Double.parseDouble(resultJson.getString("amount")) / 100);
+                            double finalAmount = itemTotal - totalDiscountInPrice;
+                            itemTotal = finalAmount;
+                            binding.itemPlusDevCharges.setText(AppConstant.CURRENCY + " " + itemTotal);
+                            Log.e("asdasdasdasd", "totalDiscountInPrice = " + totalDiscountInPrice);
+                            Log.e("asdasdasdasd", "finalAmount = " + finalAmount);
+                        } else {
+                            double finalAmount = itemTotal - (Double.parseDouble(resultJson.getString("amount")));
+                            itemTotal = finalAmount;
+                            binding.itemPlusDevCharges.setText(AppConstant.CURRENCY + " " + itemTotal);
+                        }
+
+                        Log.e("asfddasfasdf", "response = " + response);
+
+                    } else {
+
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                ProjectUtil.pauseProgressDialog();
+            }
+
+        });
+
+    }
+
     private void getCartApiCall() {
 
         builderStore = new StringBuilder();
         builder = new StringBuilder();
 
-        Log.e("dsfdsffs","userId = " + modelLogin.getResult().getId());
+        Log.e("dsfdsffs", "userId = " + modelLogin.getResult().getId());
 
-        ProjectUtil.showProgressDialog(mContext,false,getString(R.string.please_wait));
+        ProjectUtil.showProgressDialog(mContext, false, getString(R.string.please_wait));
 
-        HashMap<String,String> param = new HashMap<>();
-        param.put("user_id",modelLogin.getResult().getId());
+        HashMap<String, String> param = new HashMap<>();
+        param.put("user_id", modelLogin.getResult().getId());
 
         Api api = ApiFactory.getClientWithoutHeader(mContext).create(Api.class);
         Call<ResponseBody> call = api.getStoreCartApiCall(param);
@@ -129,67 +222,71 @@ public class MyCartActivity extends AppCompatActivity {
                     String responseString = response.body().string();
                     JSONObject jsonObject = new JSONObject(responseString);
 
-                    if(jsonObject.getString("status").equals("1")) {
+                    if (jsonObject.getString("status").equals("1")) {
 
-                        Log.e("getStoreCartApiCall","response = " + response);
-                        Log.e("getStoreCartApiCall","responseString = " + responseString);
+                        Log.e("getStoreCartApiCall", "response = " + response);
+                        Log.e("getStoreCartApiCall", "responseString = " + responseString);
 
                         ModelMyStoreCart modelMyStoreCart = new Gson().fromJson(responseString, ModelMyStoreCart.class);
 
                         // storeId = modelMyStoreCart.getResult().get(0).getShop_id();
-                        itemTotal = Double.parseDouble(modelMyStoreCart.getTotal_amount()+"");
+                        itemTotal = Double.parseDouble(modelMyStoreCart.getTotal_amount() + "")
+                                + Double.parseDouble(modelMyStoreCart.getDelivery_charge());
 
-                        Log.e("getStoreCartApiCall","storeId = " + storeId);
+                        Log.e("getStoreCartApiCall", "storeId = " + storeId);
 
-                        AdapterMyCart adapterMyCart = new AdapterMyCart(mContext,modelMyStoreCart.getResult());
+                        AdapterMyCart adapterMyCart = new AdapterMyCart(mContext, modelMyStoreCart.getResult());
                         binding.rvCartItem.setAdapter(adapterMyCart);
                         binding.itemPlusDevCharges.setText(AppConstant.CURRENCY + " " + (modelMyStoreCart.getTotal_amount()));
+                        binding.devCharges.setText(AppConstant.CURRENCY + " " + (modelMyStoreCart.getDelivery_charge()));
+                        binding.toPay.setText(AppConstant.CURRENCY + " " + (int) itemTotal);
 
                         HashSet<String> storeHash = new HashSet<>();
-                        HashMap<String,String> storeAmountHash = new HashMap<>();
+                        HashMap<String, String> storeAmountHash = new HashMap<>();
 
-                        for(int i=0;i<modelMyStoreCart.getResult().size();i++)
-                          storeHash.add(modelMyStoreCart.getResult().get(i).getShop_id());
+                        for (int i = 0; i < modelMyStoreCart.getResult().size(); i++)
+                            storeHash.add(modelMyStoreCart.getResult().get(i).getShop_id());
 
                         String[] str = new String[storeHash.size()];
                         storeHash.toArray(str);
 
-                        for(int i=0;i<str.length;i++) {
+                        for (int i = 0; i < str.length; i++) {
                             builderStore.append(str[i] + ",");
-                            for(int j=0;j<modelMyStoreCart.getResult().size();j++) {
-                                if(str[i].equals(modelMyStoreCart.getResult().get(j).getShop_id())) {
-                                   storeAmountHash.put(modelMyStoreCart.getResult().get(j).getShop_id()
-                                           ,modelMyStoreCart.getResult().get(j).getItem_amount());
-                                   builder.append(modelMyStoreCart.getResult().get(j).getCart_id() + ",");
+                            for (int j = 0; j < modelMyStoreCart.getResult().size(); j++) {
+                                if (str[i].equals(modelMyStoreCart.getResult().get(j).getShop_id())) {
+                                    storeAmountHash.put(modelMyStoreCart.getResult().get(j).getShop_id()
+                                            , modelMyStoreCart.getResult().get(j).getItem_amount());
+                                    builder.append(modelMyStoreCart.getResult().get(j).getCart_id() + ",");
                                 }
                             }
-                            if(builder.length() != 0) {
-                                builder = builder.deleteCharAt(builder.length()-1);
+                            if (builder.length() != 0) {
+                                builder = builder.deleteCharAt(builder.length() - 1);
                                 builder.append("_");
                             }
                         }
 
-                        if(builderStore.length() != 0) builderStore.deleteCharAt(builderStore.length() - 1);
-                        if(builder.length() != 0) builder.deleteCharAt(builder.length() - 1);
+                        if (builderStore.length() != 0)
+                            builderStore.deleteCharAt(builderStore.length() - 1);
+                        if (builder.length() != 0) builder.deleteCharAt(builder.length() - 1);
 
                         storeAmountString = storeAmountHash.values().toString().replaceAll("\\[|\\]|\\s", "");
 
-                        Log.e("builderbuilder","builder = " + builder.toString());
-                        Log.e("builderbuilder","builderStore = " + builderStore.toString());
-                        Log.e("builderbuilder","stringStoreAmount = " +
+                        Log.e("builderbuilder", "builder = " + builder.toString());
+                        Log.e("builderbuilder", "builderStore = " + builderStore.toString());
+                        Log.e("builderbuilder", "stringStoreAmount = " +
                                 storeAmountHash.values().toString().replaceAll("\\[|\\]|\\s", ""));
 
                     } else {
                         builder = new StringBuilder();
                         builderStore = new StringBuilder();
                         binding.itemPlusDevCharges.setText(AppConstant.CURRENCY + 0.0);
-                        AdapterMyCart adapterStores = new AdapterMyCart(mContext,null);
+                        AdapterMyCart adapterStores = new AdapterMyCart(mContext, null);
                         binding.rvCartItem.setAdapter(adapterStores);
                     }
 
                 } catch (Exception e) {
                     // Toast.makeText(mContext, "Exception = " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.e("Exception","Exception = " + e.getMessage());
+                    Log.e("Exception", "Exception = " + e.getMessage());
                 }
 
             }
@@ -204,10 +301,10 @@ public class MyCartActivity extends AppCompatActivity {
     }
 
     private void getCartItemNew() {
-        Log.e("dsfdsffs","userId = " + modelLogin.getResult().getId());
+        Log.e("dsfdsffs", "userId = " + modelLogin.getResult().getId());
 
-        HashMap<String,String> param = new HashMap<>();
-        param.put("user_id",modelLogin.getResult().getId());
+        HashMap<String, String> param = new HashMap<>();
+        param.put("user_id", modelLogin.getResult().getId());
 
         Api api = ApiFactory.getClientWithoutHeader(mContext).create(Api.class);
         Call<ResponseBody> call = api.getStoreCartApiCall(param);
@@ -221,38 +318,38 @@ public class MyCartActivity extends AppCompatActivity {
                     String responseString = response.body().string();
                     JSONObject jsonObject = new JSONObject(responseString);
 
-                    if(jsonObject.getString("status").equals("1")) {
+                    if (jsonObject.getString("status").equals("1")) {
 
-                        Log.e("getStoreCartApiCall","response = " + response);
-                        Log.e("getStoreCartApiCall","responseString = " + responseString);
+                        Log.e("getStoreCartApiCall", "response = " + response);
+                        Log.e("getStoreCartApiCall", "responseString = " + responseString);
 
                         ModelMyStoreCart modelMyStoreCart = new Gson().fromJson(responseString, ModelMyStoreCart.class);
 
                         // storeId = modelMyStoreCart.getResult().get(0).getRestaurant_id();
                         itemTotal = modelMyStoreCart.getTotal_amount();
 
-                        Log.e("getStoreCartApiCall","itemTotal = " + itemTotal);
+                        Log.e("getStoreCartApiCall", "itemTotal = " + itemTotal);
 
-                        AdapterMyCart adapterMyCart = new AdapterMyCart(mContext,modelMyStoreCart.getResult());
+                        AdapterMyCart adapterMyCart = new AdapterMyCart(mContext, modelMyStoreCart.getResult());
                         binding.rvCartItem.setAdapter(adapterMyCart);
-                        binding.itemPlusDevCharges.setText(AppConstant.CURRENCY+" " + (modelMyStoreCart.getTotal_amount()));
+                        binding.itemPlusDevCharges.setText(AppConstant.CURRENCY + " " + (modelMyStoreCart.getTotal_amount()));
 
-                        for(int i=0;i<modelMyStoreCart.getResult().size();i++)
-                            builder.append(modelMyStoreCart.getResult().get(i).getItem_id()+",");
-                        Log.e("builderbuilder","builder = " + builder.deleteCharAt(builder.length()-1));
+                        for (int i = 0; i < modelMyStoreCart.getResult().size(); i++)
+                            builder.append(modelMyStoreCart.getResult().get(i).getItem_id() + ",");
+                        Log.e("builderbuilder", "builder = " + builder.deleteCharAt(builder.length() - 1));
 
-                        builder = builder.deleteCharAt(builder.length()-1);
+                        builder = builder.deleteCharAt(builder.length() - 1);
 
                     } else {
                         builder = new StringBuilder();
                         binding.itemPlusDevCharges.setText(AppConstant.CURRENCY + 0.0);
-                        AdapterMyCart adapterStores = new AdapterMyCart(mContext,null);
+                        AdapterMyCart adapterStores = new AdapterMyCart(mContext, null);
                         binding.rvCartItem.setAdapter(adapterStores);
                     }
 
                 } catch (Exception e) {
                     // Toast.makeText(mContext, "Exception = " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    Log.e("Exception","Exception = " + e.getMessage());
+                    Log.e("Exception", "Exception = " + e.getMessage());
                 }
 
             }
@@ -267,7 +364,7 @@ public class MyCartActivity extends AppCompatActivity {
     }
 
     public void updateCartId(ArrayList<ModelMyStoreCart.Result> itemsList) {
-         getCartItemNew();
+        getCartItemNew();
 //        builder = new StringBuilder();
 //        if(itemsList != null && itemsList.size() != 0) {
 //            for(int i=0;i<itemsList.size();i++) {

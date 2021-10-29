@@ -5,7 +5,7 @@
     <data>
         <variable
             name="driver"
-            type="com.tech.amanah.taxiservices.models.UserDetail"/>
+            type="com.tech.amanah.taxiservices.models.ModelLogin.Result"/>
     </data>
 
     <RelativeLayout
@@ -82,10 +82,9 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="@dimen/_30sdp"
                     android:fontFamily="@font/poppins_bold"
-                    android:text="Car Number"
+                    android:text="@string/car_number"
                     android:textColor="@color/textColor"
                     android:textSize="@dimen/_13sdp" />
-<!--                android:text="@{driver.carNumber}"-->
 
                 <TextView
                     android:id="@+id/tvCar"
@@ -94,20 +93,21 @@
                     android:layout_below="@id/tvCaraNumber"
                     android:layout_alignParentEnd="true"
                     android:fontFamily="@font/poppins_regular"
-                    android:text="JHWR7574"
+                    android:text="@{driver.vehicle_number}"
                     android:textColor="@color/textColor"
                     android:textSize="@dimen/_12sdp" />
 
                 <RelativeLayout
                     android:id="@+id/ivCancel"
-                    android:layout_width="@dimen/_60sdp"
-                    android:layout_height="@dimen/_60sdp"
+                    android:layout_width="@dimen/_65sdp"
+                    android:layout_height="@dimen/_65sdp"
                     android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="true">
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginRight="@dimen/_50sdp">
 
                     <ImageView
-                        android:layout_width="@dimen/_45sdp"
-                        android:layout_height="@dimen/_45sdp"
+                        android:layout_width="@dimen/_48sdp"
+                        android:layout_height="@dimen/_48sdp"
                         android:layout_centerInParent="true"
                         android:src="@drawable/ic_cancel_red" />
 
@@ -116,14 +116,15 @@
                 <RelativeLayout
                     android:layout_width="@dimen/_65sdp"
                     android:layout_height="@dimen/_65sdp"
-                    android:layout_alignParentBottom="true">
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="@dimen/_50sdp">
 
                     <ImageView
                         android:id="@+id/ic_call"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_centerInParent="true"
-                        android:padding="@dimen/_10sdp"
+                        android:padding="@dimen/_8sdp"
                         android:src="@drawable/ic_call" />
                 </RelativeLayout>
 
@@ -133,7 +134,7 @@
                     android:layout_height="@dimen/_60sdp"
                     android:layout_alignParentBottom="true"
                     android:layout_centerInParent="true"
-                    android:layout_centerHorizontal="true">
+                    android:visibility="gone">
 
                     <ImageView
                         android:id="@+id/image"
@@ -169,11 +170,11 @@
                     android:id="@+id/driver_image"
                     android:layout_width="@dimen/_80sdp"
                     android:layout_height="@dimen/_80sdp"
+                    android:src="@drawable/user_ic"
                     app:civ_border_color="@color/purple_700"
-                    app:civ_border_width="@dimen/_10sdp"
-                    android:src="@drawable/user_ic"/>
+                    app:civ_border_width="@dimen/_10sdp" />
 
-<!--                android:text="@{driver.firstName}"-->
+                <!--                android:text="@{driver.firstName}"-->
                 <TextView
                     android:id="@+id/tvName"
                     android:layout_width="wrap_content"
@@ -182,9 +183,8 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="@dimen/_5sdp"
                     android:fontFamily="@font/poppins_medium"
-                    android:text="Driver Name"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_14sdp" />
+                    android:text="@{driver.name}"
+                    android:textColor="@color/black" />
 
                 <RatingBar
                     style="?android:attr/ratingBarStyleSmall"
@@ -193,7 +193,8 @@
                     android:layout_below="@+id/tvName"
                     android:layout_centerHorizontal="true"
                     android:progressTint="@color/purple_700"
-                    android:rating="4.0" />
+                    android:rating="4.0"
+                    android:visibility="gone" />
 
             </RelativeLayout>
 

@@ -13,8 +13,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -46,6 +48,8 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileDescriptor;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -66,17 +70,18 @@ public class AddShopDetailsAct extends AppCompatActivity {
     private final int GALLERY = 0, CAMERA = 1;
     Context mContext = AddShopDetailsAct.this;
     ActivityAddShopDetailsBinding binding;
-    File idCardFile,businessFile,frontFile;
+    File idCardFile, businessFile, frontFile;
     int imageCapturedCode;
     private LatLng latLng;
     ArrayList<String> typeIds = new ArrayList<>();
     SharedPref sharedPref;
     ModelLogin modelLogin;
+    private String str_image_path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this,R.layout.activity_add_shop_details);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_add_shop_details);
         sharedPref = SharedPref.getInstance(mContext);
         modelLogin = sharedPref.getUserDetails(AppConstant.USER_DETAILS);
 
@@ -94,48 +99,82 @@ public class AddShopDetailsAct extends AppCompatActivity {
     }
 
     private void setImageFromCameraGallery(File file) {
-        if(imageCapturedCode == 0) {
+        if (imageCapturedCode == 0) {
             businessFile = file;
-            Log.e("adfasdasd","businessFile = " + businessFile.getAbsolutePath());
-            binding.ivbusinessLicenseImg.setImageURI(Uri.parse(file.getPath()));
-        } else if(imageCapturedCode == 1) {
+            Compress.get(mContext).setQuality(90).execute(new Compress.onSuccessListener() {
+                @Override
+                public void response(boolean status, String message, File file) {
+                    binding.ivbusinessLicenseImg.setImageURI(Uri.parse(file.getPath()));
+                }
+            }).CompressedImage(file.getPath());
+            Log.e("filefilefile", "After file Size = " + file.length() / 1024);
+        } else if (imageCapturedCode == 1) {
             idCardFile = file;
-            Log.e("adfasdasd","idCardFile = " + idCardFile.getAbsolutePath());
-            binding.ividCardImg.setImageURI(Uri.parse(file.getPath()));
-        } else if(imageCapturedCode == 2) {
+            Compress.get(mContext).setQuality(90).execute(new Compress.onSuccessListener() {
+                @Override
+                public void response(boolean status, String message, File file) {
+                    binding.ividCardImg.setImageURI(Uri.parse(file.getPath()));
+                }
+            }).CompressedImage(file.getPath());
+        } else if (imageCapturedCode == 2) {
             frontFile = file;
-            Log.e("adfasdasd","frontFile = " + frontFile.getAbsolutePath());
-            binding.ivShopFrontImg.setImageURI(Uri.parse(file.getPath()));
+            Compress.get(mContext).setQuality(90).execute(new Compress.onSuccessListener() {
+                @Override
+                public void response(boolean status, String message, File file) {
+                    binding.ivShopFrontImg.setImageURI(Uri.parse(file.getPath()));
+                }
+            }).CompressedImage(file.getPath());
         }
     }
 
-    private void showPictureDialog() {
+    public void showPictureDialog() {
         AlertDialog.Builder pictureDialog = new AlertDialog.Builder(mContext);
         pictureDialog.setTitle("Select Action");
-        String[] pictureDialogItems = {"Select photo from gallery","Capture photo from camera"};
+        String[] pictureDialogItems = {"Select photo from gallery", "Capture photo from camera"};
         pictureDialog.setItems(pictureDialogItems,
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case 0:
-                              Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                              startActivityForResult(galleryIntent, GALLERY);
-                              break;
+                                ProjectUtil.openGallery(mContext, GALLERY);
+                                break;
                             case 1:
-                              Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                              startActivityForResult(intent, CAMERA);
-                              break;
+                                str_image_path = ProjectUtil.openCamera(mContext, CAMERA);
+                                break;
                         }
                     }
                 });
         pictureDialog.show();
     }
 
+//    private void showPictureDialog() {
+//        AlertDialog.Builder pictureDialog = new AlertDialog.Builder(mContext);
+//        pictureDialog.setTitle("Select Action");
+//        String[] pictureDialogItems = {"Select photo from gallery", "Capture photo from camera"};
+//        pictureDialog.setItems(pictureDialogItems,
+//                new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        switch (which) {
+//                            case 0:
+//                                Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                                startActivityForResult(galleryIntent, GALLERY);
+//                                break;
+//                            case 1:
+//                                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                                startActivityForResult(intent, CAMERA);
+//                                break;
+//                        }
+//                    }
+//                });
+//        pictureDialog.show();
+//    }
+
     private void itit() {
 
         binding.address.setOnClickListener(v -> {
-             startActivityForResult(new Intent(mContext,PinLocationActivity.class),222);
+            startActivityForResult(new Intent(mContext, PinLocationActivity.class), 222);
 //           List<Place.Field> fields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG, Place.Field.ADDRESS);
 //           Intent intent = new Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
 //                  .build(this);
@@ -145,7 +184,7 @@ public class AddShopDetailsAct extends AppCompatActivity {
         binding.ivbusinessLicenseImg.setOnClickListener(v -> {
             if (checkPermissions()) {
                 imageCapturedCode = 0;
-                Log.e("ImageCapture","imageCapturedCode = " + imageCapturedCode);
+                Log.e("ImageCapture", "imageCapturedCode = " + imageCapturedCode);
                 showPictureDialog();
             } else {
                 requestPermissions();
@@ -155,7 +194,7 @@ public class AddShopDetailsAct extends AppCompatActivity {
         binding.ividCardImg.setOnClickListener(v -> {
             if (checkPermissions()) {
                 imageCapturedCode = 1;
-                Log.e("ImageCapture","imageCapturedCode = " + imageCapturedCode);
+                Log.e("ImageCapture", "imageCapturedCode = " + imageCapturedCode);
                 showPictureDialog();
             } else {
                 requestPermissions();
@@ -165,7 +204,7 @@ public class AddShopDetailsAct extends AppCompatActivity {
         binding.ivShopFrontImg.setOnClickListener(v -> {
             if (checkPermissions()) {
                 imageCapturedCode = 2;
-                Log.e("ImageCapture","imageCapturedCode = " + imageCapturedCode);
+                Log.e("ImageCapture", "imageCapturedCode = " + imageCapturedCode);
                 showPictureDialog();
             } else {
                 requestPermissions();
@@ -182,12 +221,12 @@ public class AddShopDetailsAct extends AppCompatActivity {
                 @Override
                 public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                     String AM_PM;
-                    if (selectedHour >=0 && selectedHour < 12){
+                    if (selectedHour >= 0 && selectedHour < 12) {
                         AM_PM = "AM";
                     } else {
                         AM_PM = "PM";
                     }
-                    binding.etCloseTime.setText( selectedHour + ":" + selectedMinute+" "+AM_PM);
+                    binding.etCloseTime.setText(selectedHour + ":" + selectedMinute + " " + AM_PM);
                 }
             }, hour, minute, false);
             mTimePicker.setTitle("Select Time");
@@ -209,7 +248,7 @@ public class AddShopDetailsAct extends AppCompatActivity {
                     } else {
                         AM_PM = "PM";
                     }
-                    binding.etOpenTime.setText(selectedHour + ":" + selectedMinute+" "+AM_PM);
+                    binding.etOpenTime.setText(selectedHour + ":" + selectedMinute + " " + AM_PM);
                 }
             }, hour, minute, false);
             mTimePicker.setTitle("Select Time");
@@ -230,11 +269,11 @@ public class AddShopDetailsAct extends AppCompatActivity {
             } else if (TextUtils.isEmpty(binding.etDescription.getText().toString().trim())) {
                 Toast.makeText(mContext, getString(R.string.all_fields_man), Toast.LENGTH_SHORT).show();
             } else if (frontFile == null) {
-                Toast.makeText(mContext, getString(R.string.please_upload_shop_front_copy),Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, getString(R.string.please_upload_shop_front_copy), Toast.LENGTH_SHORT).show();
             } else if (businessFile == null) {
-                Toast.makeText(mContext, getString(R.string.please_upload_busi_license_copy),Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, getString(R.string.please_upload_busi_license_copy), Toast.LENGTH_SHORT).show();
             } else if (idCardFile == null) {
-                Toast.makeText(mContext, getString(R.string.please_upload_id_card_copy),Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, getString(R.string.please_upload_id_card_copy), Toast.LENGTH_SHORT).show();
             } else {
                 addShopApiCall();
             }
@@ -271,8 +310,8 @@ public class AddShopDetailsAct extends AppCompatActivity {
         RequestBody user_id = RequestBody.create(MediaType.parse("text/plain"), modelLogin.getResult().getId());
         RequestBody shop_name = RequestBody.create(MediaType.parse("text/plain"), binding.etShopName.getText().toString().trim());
         RequestBody description = RequestBody.create(MediaType.parse("text/plain"), binding.etDescription.getText().toString().trim());
-        RequestBody address = RequestBody.create(MediaType.parse("text/plain"), binding.address.getText().toString().trim()+
-                " " +binding.landAddress.getText().toString());
+        RequestBody address = RequestBody.create(MediaType.parse("text/plain"), binding.address.getText().toString().trim() +
+                " " + binding.landAddress.getText().toString());
         RequestBody lat = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(latLng.latitude));
         RequestBody lon = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(latLng.longitude));
         RequestBody open_time = RequestBody.create(MediaType.parse("text/plain"), binding.etOpenTime.getText().toString());
@@ -295,7 +334,8 @@ public class AddShopDetailsAct extends AppCompatActivity {
                     if (jsonObject.getString("status").equals("1")) {
                         modelLogin.getResult().setShop_status("1");
                         sharedPref.setUserDetails(AppConstant.USER_DETAILS, modelLogin);
-                        startActivity(new Intent(mContext, ShopHomeAct.class));
+                        startActivity(new Intent(mContext, LoginActivity.class));
+                        // startActivity(new Intent(mContext, ShopHomeAct.class));
                         finish();
                     }
 
@@ -321,7 +361,7 @@ public class AddShopDetailsAct extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
-//            if (resultCode == RESULT_OK) {
+            //            if (resultCode == RESULT_OK) {
 //                Place place = Autocomplete.getPlaceFromIntent(data);
 //                latLng = place.getLatLng();
 //                try {
@@ -332,51 +372,73 @@ public class AddShopDetailsAct extends AppCompatActivity {
 //            }
         } else if (requestCode == GALLERY) {
             if (resultCode == RESULT_OK) {
-                if (data != null) {
-                    Uri contentURI = data.getData();
-                    try {
-                        // Bitmap bitmap = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), contentURI);
-                        String path = getRealPathFromURI(contentURI);
-                        setImageFromCameraGallery(new File(path));
-//                        Compress.get(mContext).setQuality(100).execute(new Compress.onSuccessListener() {
-//                            @Override
-//                            public void response(boolean status, String message, File file) {
-//
-//                            }
-//                        }).CompressedImage(path);
-
-                    } catch (Exception e) {
-                        Log.e("hjagksads", "image = " + e.getMessage());
-                        e.printStackTrace();
-                    }
-                }
+                String path = ProjectUtil.getRealPathFromURI(mContext, data.getData());
+                setImageFromCameraGallery(new File(path));
             }
         } else if (requestCode == CAMERA) {
             if (resultCode == RESULT_OK) {
-                Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-                String path = getRealPathFromURI(getImageUri(mContext, thumbnail));
-                setImageFromCameraGallery(new File(path));
-//                Compress.get(mContext).setQuality(100)
-//                        .execute(new Compress.onSuccessListener() {
-//                            @Override
-//                            public void response(boolean status, String message, File file) {
-//                                Toast.makeText(mContext, "Compress", Toast.LENGTH_SHORT).show();
-//                                setImageFromCameraGallery(file);
-//                            }
-//                        }).CompressedImage(path);
+                setImageFromCameraGallery(new File(str_image_path));
             }
-
-        } else if(resultCode == 222) {
+        } else if (resultCode == 222) {
             String add = data.getStringExtra("add");
-            Log.e("sfasfdas","fdasfdas = 222 = " + add);
-            Log.e("sfasfdas","fdasfdas = lat = " + data.getDoubleExtra("lat",0.0));
-            Log.e("sfasfdas","fdasfdas = lon = " + data.getDoubleExtra("lon",0.0));
-            double lat = data.getDoubleExtra("lat",0.0);
-            double lon = data.getDoubleExtra("lon",0.0);
-            latLng = new LatLng(lat,lon);
+            Log.e("sfasfdas", "fdasfdas = 222 = " + add);
+            Log.e("sfasfdas", "fdasfdas = lat = " + data.getDoubleExtra("lat", 0.0));
+            Log.e("sfasfdas", "fdasfdas = lon = " + data.getDoubleExtra("lon", 0.0));
+            double lat = data.getDoubleExtra("lat", 0.0);
+            double lon = data.getDoubleExtra("lon", 0.0);
+            latLng = new LatLng(lat, lon);
             binding.address.setText(add);
         }
 
+//            if (requestCode == GALLERY) {
+//            if (resultCode == RESULT_OK) {
+//                if (data != null) {
+//                    Uri contentURI = data.getData();
+//                    try {
+//                        // Bitmap bitmap = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), contentURI);
+//                        String path = getRealPathFromURI(contentURI);
+//
+//                        setImageFromCameraGallery(new File(path));
+//
+////                        Compress.get(mContext).setQuality(100).execute(new Compress.onSuccessListener() {
+////                            @Override
+////                            public void response(boolean status, String message, File file) {
+////                                setImageFromCameraGallery(new File(path));
+////                            }
+////                        }).CompressedImage(path);
+//
+//                    } catch (Exception e) {
+//                        Log.e("hjagksads", "image = " + e.getMessage());
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        } else if (requestCode == CAMERA) {
+//            if (resultCode == RESULT_OK) {
+//                Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+//                String path = getRealPathFromURI(getImageUri(mContext, thumbnail));
+//                setImageFromCameraGallery(new File(path));
+////                Compress.get(mContext).setQuality(100)
+////                        .execute(new Compress.onSuccessListener() {
+////                            @Override
+////                            public void response(boolean status, String message, File file) {
+////                                Toast.makeText(mContext, "Compress", Toast.LENGTH_SHORT).show();
+////                                setImageFromCameraGallery(file);
+////                            }
+////                        }).CompressedImage(path);
+//            }
+
+//    }
+
+    }
+
+    private Bitmap getBitmapFromUri(Uri uri) throws IOException {
+        ParcelFileDescriptor parcelFileDescriptor =
+                getContentResolver().openFileDescriptor(uri, "r");
+        FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+        Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+        parcelFileDescriptor.close();
+        return image;
     }
 
     private boolean checkPermissions() {
@@ -393,7 +455,7 @@ public class AddShopDetailsAct extends AppCompatActivity {
     private void requestPermissions() {
         ActivityCompat.requestPermissions(
                 this,
-                new String[] {
+                new String[]{
                         Manifest.permission.CAMERA,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.READ_EXTERNAL_STORAGE

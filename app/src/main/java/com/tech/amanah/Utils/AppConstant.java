@@ -2,7 +2,7 @@ package com.tech.amanah.Utils;
 
 public interface AppConstant {
 
-    //String BASE_URL = "http://amanahservices.com/AmanahServices/webservice/";
+    // String BASE_URL = "http://amanahservices.com/AmanahServices/webservice/";
     String BASE_URL = "http://equipmeapp.co.nz/AmanahServices/webservice/";
     String IMAGE_URL = "https://www.pickpock.net/uploads/images/";
 
@@ -33,6 +33,7 @@ public interface AppConstant {
     String USER_DETAILS = "user_details";
     String UPDATE_ORDER_STATUS = "update_order_status";
 
+    String LAST = "last";
 }
 
 

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Amanah</string>
     <string name="dont_have_an_account_signup">Dont have an account? <font color='#3797EF'>Signup</font></string>
@@ -14,7 +15,7 @@
     <string name="googlekey_other" translatable="false">AIzaSyAEfOYNjTV0R7iB7jcnYwIqA6l0tbvR2Y4</string>
 
     <string name="dialog">Dialog</string>
-    <string name="please_select_the_reason_for_cancellation">Please select the reason<br /> for cancellation:</string>
+    <string name="please_select_the_reason_for_cancellation">Please enter the reason<br /> for cancellation:</string>
     <string name="tipping_is_we">Tipping is welcome, but not required.<br /> The amount is always up to you.</string>
     <string name="finish_trip"><u>Finish Trip</u></string>
     <string name="locgout"><u>Logout</u></string>
@@ -78,6 +79,7 @@
     <string name="phone">Phone</string>
     <string name="reset_pass_msg">Reset password link sent to your mail-id</string>
     <string name="mobile_number">Mobile Number</string>
+    <string name="select">Select</string>
     <string name="add_address">Add Address</string>
     <string name="select_address">Select Address</string>
     <string name="confirm_pass">Confirm Password</string>
@@ -85,7 +87,6 @@
     <string name="submit">Submit</string>
     <string name="email_not_found">Email Not Found</string>
     <string name="select_service">Select service</string>
-    <string name="ride_history">Ride history</string>
     <string name="home">Home</string>
     <string name="my_orders">My Orders</string>
     <string name="change_password">Change Password</string>
@@ -181,6 +182,48 @@
     <string name="title">Title</string>
     <string name="support">Support</string>
     <string name="qr_code_for_this_order">QR Code For This Order</string>
+    <string name="ride_history">Ride history</string>
+    <string name="pickup_location">Pickup Location</string>
+    <string name="select_pay_type">Please select payment type</string>
+    <string name="select_car_type">Please select Car type</string>
+    <string name="car_number">Car Number</string>
+    <string name="detination_location">Destination Location</string>
+    <string name="cash">Cash</string>
+    <string name="cancel_ride_text">Are you sure you want to cancel the ride?</string>
+    <string name="driver_arrived">Driver arrived</string>
+    <string name="trip_start">Trip Started</string>
+    <string name="trip_end_text">Trip ended please give the payment to driver</string>
+    <string name="change_language">Change Language</string>
+    <string name="ride_option">Ride Option</string>
+    <string name="book_ride">Book Ride</string>
+    <string name="finish">Finish</string>
+    <string name="ride_details">Ride details</string>
+    <string name="driver_details">Driver Details</string>
+    <string name="vehicle_type">Vehicle Type</string>
+    <string name="vehicle">Vehicle</string>
+    <string name="vehicle_plate_number">Vehicle Plate Number</string>
+    <string name="payment_method">Payment Method</string>
+    <string name="trip_amount">Trip Amount</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="select_date">Select Date</string>
+    <string name="select_from_date">Please Select From Date</string>
+    <string name="select_to_date">Please Select To Date</string>
+    <string name="i_don_t_want_to_share">I don’t want to share</string>
+    <string name="can_t_contact_the_driver">Can\'t contact the driver</string>
+    <string name="driver_is_late">Driver is late</string>
+    <string name="the_price_is_not_reasonable">The price is not reasonable</string>
+    <string name="pickup_address_is_incorrect">Pickup address is incorrect</string>
+    <string name="enter_reason">Enter Reason</string>
+    <string name="please_enter_reason">Please enter the reason</string>
+    <string name="add_promo_code">Add Promo Code</string>
+    <string name="add">Add</string>
+    <string name="apply_promo_code">Apply Promo Code</string>
+    <string name="enter_code">Enter Code</string>
+    <string name="apply">Apply</string>
+    <string name="please_enter_code">Please enter code</string>
+    <string name="item_total">Item Total</string>
+    <string name="dev_charge">Delivery Charges</string>
 
     <string-array name="user_type">
         <item>I Am User</item>

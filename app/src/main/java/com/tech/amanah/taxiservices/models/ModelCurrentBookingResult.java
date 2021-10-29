@@ -123,7 +123,7 @@ public class ModelCurrentBookingResult implements Serializable {
     private Double hourdiff;
     @SerializedName("driver_details")
     @Expose
-    private List<UserDetail> userDetails = null;
+    private List<ModelLogin.Result> userDetails = null;
     @SerializedName("type_name")
     @Expose
     private String typeName;
@@ -454,11 +454,11 @@ public class ModelCurrentBookingResult implements Serializable {
     }
 
 
-    public List<UserDetail> getUserDetails() {
+    public List<ModelLogin.Result> getUserDetails() {
         return userDetails;
     }
 
-    public void setUserDetails(List<UserDetail> userDetails) {
+    public void setUserDetails(List<ModelLogin.Result> userDetails) {
         this.userDetails = userDetails;
     }
 

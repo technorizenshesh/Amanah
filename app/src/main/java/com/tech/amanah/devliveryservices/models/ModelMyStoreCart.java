@@ -9,6 +9,15 @@ public class ModelMyStoreCart implements Serializable {
     private String message;
     private String status;
     private int total_amount;
+    private String delivery_charge;
+
+    public String getDelivery_charge() {
+        return delivery_charge;
+    }
+
+    public void setDelivery_charge(String delivery_charge) {
+        this.delivery_charge = delivery_charge;
+    }
 
     public void setResult(ArrayList<Result> result) {
         this.result = result;

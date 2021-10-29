@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.Dialog;
@@ -22,6 +23,7 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
@@ -65,7 +67,8 @@ public class ShopHomeAct extends AppCompatActivity {
     Dialog mDialog;
     AddItemsDialogBinding dialogBinding;
     File mFile;
-    private final int GALLERY=0,CAMERA=1;
+    private final int GALLERY = 0, CAMERA = 1;
+    private String str_image_path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +83,19 @@ public class ShopHomeAct extends AppCompatActivity {
     private void itit() {
 
         getShopItemsApiCall();
+
+        binding.rvMyProducts.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0) {
+                    // Scrolling down
+                    binding.ivAddItems.setVisibility(View.VISIBLE);
+                } else if (dy < 0) {
+                    // Scrolling up
+                    binding.ivAddItems.setVisibility(View.GONE);
+                }
+            }
+        });
 
         binding.childNavDrawer.tvUsername.setText(modelLogin.getResult().getUser_name());
         binding.childNavDrawer.tvEmail.setText(modelLogin.getResult().getEmail());
@@ -98,7 +114,7 @@ public class ShopHomeAct extends AppCompatActivity {
 
         binding.childNavDrawer.btnOrders.setOnClickListener(v -> {
             binding.drawerLayout.closeDrawer(GravityCompat.START);
-            startActivity(new Intent(mContext,ShopOrdersAct.class));
+            startActivity(new Intent(mContext, ShopOrdersAct.class));
         });
 
         binding.childNavDrawer.btnMyProducts.setOnClickListener(v -> {
@@ -155,7 +171,7 @@ public class ShopHomeAct extends AppCompatActivity {
 
     }
 
-    private void showPictureDialog() {
+    public void showPictureDialog() {
         AlertDialog.Builder pictureDialog = new AlertDialog.Builder(mContext);
         pictureDialog.setTitle("Select Action");
         String[] pictureDialogItems = {"Select photo from gallery", "Capture photo from camera"};
@@ -165,19 +181,15 @@ public class ShopHomeAct extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case 0:
-                                Intent galleryIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                                startActivityForResult(galleryIntent, GALLERY);
+                                ProjectUtil.openGallery(mContext, GALLERY);
                                 break;
                             case 1:
-                                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                startActivityForResult(intent, CAMERA);
+                                str_image_path = ProjectUtil.openCamera(mContext, CAMERA);
                                 break;
                         }
                     }
                 });
-
         pictureDialog.show();
-
     }
 
     @Override
@@ -186,43 +198,62 @@ public class ShopHomeAct extends AppCompatActivity {
 
         if (requestCode == GALLERY) {
             if (resultCode == RESULT_OK) {
-                if (data != null) {
-                    Uri contentURI = data.getData();
-                    try {
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), contentURI);
-                        String path = getRealPathFromURI(getImageUri(mContext,bitmap));
-                        mFile = new File(path);
-                        dialogBinding.ivItemImg.setImageURI(Uri.parse(path));
-    //                        Compress.get(mContext)
-//                                .setQuality(40)
-//                                .execute(new Compress.onSuccessListener() {
-//                            @Override
-//                            public void response(boolean status, String message, File file) {
-//                                mFile = file;
-//                                dialogBinding.ivItemImg.setImageURI(Uri.parse(file.getPath()));
-//                            }
-//                        }).CompressedImage(path);
-                    } catch (Exception e) {
-                        Log.e("hjagksads", "image = " + e.getMessage());
-                        e.printStackTrace();
+                String path = ProjectUtil.getRealPathFromURI(mContext, data.getData());
+                mFile = new File(path);
+                Compress.get(mContext).setQuality(90).execute(new Compress.onSuccessListener() {
+                    @Override
+                    public void response(boolean status, String message, File file) {
+                        dialogBinding.ivItemImg.setImageURI(Uri.parse(file.getPath()));
                     }
-                }
+                }).CompressedImage(path);
             }
         } else if (requestCode == CAMERA) {
             if (resultCode == RESULT_OK) {
-                Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-                String path = getRealPathFromURI(getImageUri(mContext, thumbnail));
-                mFile = new File(path);
-                dialogBinding.ivItemImg.setImageURI(Uri.parse(path));
-                //                Compress.get(mContext).setQuality(100)
-//                        .execute(new Compress.onSuccessListener() {
-//                            @Override
-//                            public void response(boolean status, String message, File file) {
-//                                mFile = file;
-//                            }
-//                        }).CompressedImage(path);
+                mFile = new File(str_image_path);
+                Compress.get(mContext).setQuality(90).execute(new Compress.onSuccessListener() {
+                    @Override
+                    public void response(boolean status, String message, File file) {
+                        dialogBinding.ivItemImg.setImageURI(Uri.parse(file.getPath()));
+                    }
+                }).CompressedImage(str_image_path);
             }
         }
+
+        //        if (requestCode == GALLERY) {
+//            if (resultCode == RESULT_OK) {
+//                if (data != null) {
+//                    Uri contentURI = data.getData();
+//                    try {
+//                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), contentURI);
+//                        String path = getRealPathFromURI(getImageUri(mContext, bitmap));
+//                        mFile = new File(path);
+//
+//                        Compress.get(mContext).setQuality(40).execute(new Compress.onSuccessListener() {
+//                            @Override
+//                            public void response(boolean status, String message, File file) {
+//                                dialogBinding.ivItemImg.setImageURI(Uri.parse(file.getPath()));
+//                            }
+//                        }).CompressedImage(mFile.getPath());
+//                        // dialogBinding.ivItemImg.setImageURI(Uri.parse(path));
+//                    } catch (Exception e) {
+//                        Log.e("hjagksads", "image = " + e.getMessage());
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        } else if (requestCode == CAMERA) {
+//            if (resultCode == RESULT_OK) {
+//                Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+//                String path = getRealPathFromURI(getImageUri(mContext, thumbnail));
+//                mFile = new File(path);
+//                Compress.get(mContext).setQuality(40).execute(new Compress.onSuccessListener() {
+//                    @Override
+//                    public void response(boolean status, String message, File file) {
+//                        dialogBinding.ivItemImg.setImageURI(Uri.parse(file.getPath()));
+//                    }
+//                }).CompressedImage(mFile.getPath());
+//            }
+//        }
 
     }
 
@@ -369,7 +400,7 @@ public class ShopHomeAct extends AppCompatActivity {
     private void requestPermissions() {
         ActivityCompat.requestPermissions(
                 this,
-                new String[] {
+                new String[]{
                         Manifest.permission.CAMERA,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.READ_EXTERNAL_STORAGE

@@ -58,7 +58,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".shops.activities.AddShopDetailsAct"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" >
+
+        </activity>
         <activity
             android:name=".activities.ChnagePassAct"
             android:screenOrientation="portrait" />
@@ -95,41 +97,47 @@
         <activity
             android:name=".activities.SelectService"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".activities.SignupActivity"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".taxiservices.activities.RideDetailActivity"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".taxiservices.activities.RideHistoryActivity"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".activities.ProfileActivity"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".taxiservices.activities.RideOptionActivity"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".activities.SplashActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".MainActivity" />
 
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="com.tech.amanah.fileprovider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
-        </provider>
+<!--        <provider-->
+<!--            android:name="androidx.core.content.FileProvider"-->
+<!--            android:authorities="com.tech.amanah.fileprovider"-->
+<!--            android:exported="false"-->
+<!--            android:grantUriPermissions="true">-->
+<!--            <meta-data-->
+<!--                android:name="android.support.FILE_PROVIDER_PATHS"-->
+<!--                android:resource="@xml/file_paths"></meta-data>-->
+<!--        </provider>-->
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
@@ -162,6 +170,16 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/picker_provider_paths" />
+        </provider>
 
     </application>
 

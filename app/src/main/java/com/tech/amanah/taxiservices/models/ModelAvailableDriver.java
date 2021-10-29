@@ -20,6 +20,9 @@ public class ModelAvailableDriver {
     @SerializedName("last_name")
     @Expose
     private String lastName;
+    @SerializedName("name")
+    @Expose
+    private String name;
     @SerializedName("phone_code")
     @Expose
     private String phoneCode;
@@ -155,6 +158,14 @@ public class ModelAvailableDriver {
     @SerializedName("result")
     @Expose
     private String result;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getId() {
         return id;

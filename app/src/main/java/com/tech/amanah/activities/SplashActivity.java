@@ -18,6 +18,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.tech.amanah.R;
 import com.tech.amanah.Utils.AppConstant;
+import com.tech.amanah.Utils.ProjectUtil;
 import com.tech.amanah.Utils.SharedPref;
 import com.tech.amanah.shops.activities.AddShopDetailsAct;
 import com.tech.amanah.shops.activities.ShopHomeAct;
@@ -103,6 +104,13 @@ public class SplashActivity extends AppCompatActivity {
                 if(sharedPref.getBooleanValue(AppConstant.IS_REGISTER)) {
                     modelLogin = sharedPref.getUserDetails(AppConstant.USER_DETAILS);
                     Log.e("dasdasdasd","shope Type = " + modelLogin.getResult().getType());
+                    if("en".equals(sharedPref.getLanguage("lan"))) {
+                        ProjectUtil.updateResources(mContext,"en");
+                    } else if("so".equals(sharedPref.getLanguage("lan"))) {
+                        ProjectUtil.updateResources(mContext,"so");
+                    } else {
+                        ProjectUtil.updateResources(mContext,"en");
+                    }
                     if("SHOP".equalsIgnoreCase(modelLogin.getResult().getType())) {
                         Log.e("dasdasdasd","shope status = " + modelLogin.getResult().getShop_status());
                         if("0".equals(modelLogin.getResult().getShop_status())) {

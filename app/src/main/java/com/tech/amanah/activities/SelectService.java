@@ -17,8 +17,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.Projection;
 import com.google.gson.Gson;
 import com.tech.amanah.R;
 import com.tech.amanah.Utils.AppConstant;
@@ -36,6 +39,8 @@ import com.tech.amanah.devliveryservices.adapters.AdapterMyOrders;
 import com.tech.amanah.devliveryservices.adapters.AdapterOrderItems;
 import com.tech.amanah.devliveryservices.models.ModelStoreBooking;
 import com.tech.amanah.devliveryservices.models.ModelSupport;
+import com.tech.amanah.taxiservices.activities.RideHistoryActivity;
+import com.tech.amanah.taxiservices.activities.TaxiHomeAct;
 import com.tech.amanah.taxiservices.models.ModelLogin;
 
 import org.json.JSONObject;
@@ -57,7 +62,7 @@ public class SelectService extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this,R.layout.activity_select_service);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_select_service);
         sharedPref = SharedPref.getInstance(mContext);
         modelLogin = sharedPref.getUserDetails(AppConstant.USER_DETAILS);
         itit();
@@ -78,11 +83,13 @@ public class SelectService extends AppCompatActivity {
         binding.childNavDrawer.tvEmail.setText(modelLogin.getResult().getEmail());
 
         binding.cvTaxi.setOnClickListener(v -> {
-//        Intent i = new Intent(SelectService.this, TaxiHomeAct.class);
-//        startActivity(i);
+            ProjectUtil.blinkAnimation(binding.cvTaxi);
+            Intent i = new Intent(SelectService.this, TaxiHomeAct.class);
+            startActivity(i);
         });
 
         binding.cvDelivery.setOnClickListener(v -> {
+            ProjectUtil.blinkAnimation(binding.cvDelivery);
             Intent i = new Intent(SelectService.this, ShopTypeListAct.class);
             startActivity(i);
         });
@@ -95,6 +102,16 @@ public class SelectService extends AppCompatActivity {
             binding.drawerLayout.closeDrawer(GravityCompat.START);
         });
 
+        binding.childNavDrawer.btnRideHistory.setOnClickListener(v -> {
+            binding.drawerLayout.closeDrawer(GravityCompat.START);
+            startActivity(new Intent(mContext, RideHistoryActivity.class));
+        });
+
+        binding.childNavDrawer.btnChangePass.setOnClickListener(v -> {
+            binding.drawerLayout.closeDrawer(GravityCompat.START);
+            startActivity(new Intent(mContext, ChnagePassAct.class));
+        });
+
         binding.childNavDrawer.btnCompAccount.setOnClickListener(v -> {
             binding.drawerLayout.closeDrawer(GravityCompat.START);
             compAccDialog();
@@ -105,13 +122,14 @@ public class SelectService extends AppCompatActivity {
             supportApi();
         });
 
-        binding.childNavDrawer.btnOrders.setOnClickListener(v -> {
+        binding.childNavDrawer.btnChngLang.setOnClickListener(v -> {
             binding.drawerLayout.closeDrawer(GravityCompat.START);
-            startActivity(new Intent(mContext,MyOrdersAct.class));
+            changeLangDialog();
         });
 
-        binding.childNavDrawer.btnChangePass.setOnClickListener(v -> {
+        binding.childNavDrawer.btnOrders.setOnClickListener(v -> {
             binding.drawerLayout.closeDrawer(GravityCompat.START);
+            startActivity(new Intent(mContext, MyOrdersAct.class));
         });
 
         binding.childNavDrawer.tvLogout.setOnClickListener(v -> {
@@ -121,10 +139,47 @@ public class SelectService extends AppCompatActivity {
 
     }
 
+    private void changeLangDialog() {
+        Dialog dialog = new Dialog(mContext, WindowManager.LayoutParams.MATCH_PARENT);
+        dialog.setContentView(R.layout.change_language_dialog);
+        dialog.setCancelable(true);
+
+        Button btContinue = dialog.findViewById(R.id.btContinue);
+        RadioButton radioEng = dialog.findViewById(R.id.radioEng);
+        RadioButton radioSpanish = dialog.findViewById(R.id.radioSpanish);
+
+        if ("so".equals(sharedPref.getLanguage("lan"))) {
+            radioSpanish.setChecked(true);
+        } else {
+            radioEng.setChecked(true);
+        }
+
+        dialog.getWindow().setBackgroundDrawableResource(R.color.translucent_black);
+
+        btContinue.setOnClickListener(v -> {
+            if (radioEng.isChecked()) {
+                ProjectUtil.updateResources(mContext, "en");
+                sharedPref.setlanguage("lan", "en");
+                finish();
+                startActivity(new Intent(mContext, SelectService.class));
+                dialog.dismiss();
+            } else if (radioSpanish.isChecked()) {
+                ProjectUtil.updateResources(mContext, "so");
+                sharedPref.setlanguage("lan", "so");
+                finish();
+                startActivity(new Intent(mContext, SelectService.class));
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+
+    }
+
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(intent.getAction().equals("Job_Status_Action")) {
+            if (intent.getAction().equals("Job_Status_Action")) {
                 newMyOrders();
             }
         }
@@ -140,16 +195,16 @@ public class SelectService extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         newMyOrders();
-        registerReceiver(broadcastReceiver,new IntentFilter("Job_Status_Action"));
+        registerReceiver(broadcastReceiver, new IntentFilter("Job_Status_Action"));
     }
 
     private void newMyOrders() {
         Api api = ApiFactory.getClientWithoutHeader(mContext).create(Api.class);
 
-        HashMap<String,String> param = new HashMap<>();
-        param.put("user_id",modelLogin.getResult().getId());
+        HashMap<String, String> param = new HashMap<>();
+        param.put("user_id", modelLogin.getResult().getId());
 
-        Log.e("sadasdadasd","user_id = " + modelLogin.getResult().getId());
+        Log.e("sadasdadasd", "user_id = " + modelLogin.getResult().getId());
 
         Call<ResponseBody> call = api.myOrderApiCall(param);
         call.enqueue(new Callback<ResponseBody>() {
@@ -162,12 +217,13 @@ public class SelectService extends AppCompatActivity {
                     String stringResponse = response.body().string();
                     JSONObject jsonObject = new JSONObject(stringResponse);
 
-                    if(jsonObject.getString("status").equals("1")) {
-                        ModelStoreBooking modelStoreBooking = new Gson().fromJson(stringResponse,ModelStoreBooking.class);
-                        AdapterMyOrders adapterMyOrders = new AdapterMyOrders(mContext,modelStoreBooking.getResult());;
+                    if (jsonObject.getString("status").equals("1")) {
+                        ModelStoreBooking modelStoreBooking = new Gson().fromJson(stringResponse, ModelStoreBooking.class);
+                        AdapterMyOrders adapterMyOrders = new AdapterMyOrders(mContext, modelStoreBooking.getResult());
+                        ;
                         binding.rvMyOrder.setAdapter(adapterMyOrders);
                     } else {
-                        AdapterMyOrders adapterMyOrders = new AdapterMyOrders(mContext,null);
+                        AdapterMyOrders adapterMyOrders = new AdapterMyOrders(mContext, null);
                         binding.rvMyOrder.setAdapter(adapterMyOrders);
                     }
 
@@ -188,13 +244,13 @@ public class SelectService extends AppCompatActivity {
     }
 
     private void getMyOrders() {
-        ProjectUtil.showProgressDialog(mContext,true,getString(R.string.please_wait));
+        ProjectUtil.showProgressDialog(mContext, true, getString(R.string.please_wait));
         Api api = ApiFactory.getClientWithoutHeader(mContext).create(Api.class);
 
-        HashMap<String,String> param = new HashMap<>();
-        param.put("user_id",modelLogin.getResult().getId());
+        HashMap<String, String> param = new HashMap<>();
+        param.put("user_id", modelLogin.getResult().getId());
 
-        Log.e("sadasdadasd","user_id = " + modelLogin.getResult().getId());
+        Log.e("sadasdadasd", "user_id = " + modelLogin.getResult().getId());
 
         Call<ResponseBody> call = api.myOrderApiCall(param);
         call.enqueue(new Callback<ResponseBody>() {
@@ -207,12 +263,13 @@ public class SelectService extends AppCompatActivity {
                     String stringResponse = response.body().string();
                     JSONObject jsonObject = new JSONObject(stringResponse);
 
-                    if(jsonObject.getString("status").equals("1")) {
-                        ModelStoreBooking modelStoreBooking = new Gson().fromJson(stringResponse,ModelStoreBooking.class);
-                        AdapterMyOrders adapterMyOrders = new AdapterMyOrders(mContext,modelStoreBooking.getResult());;
+                    if (jsonObject.getString("status").equals("1")) {
+                        ModelStoreBooking modelStoreBooking = new Gson().fromJson(stringResponse, ModelStoreBooking.class);
+                        AdapterMyOrders adapterMyOrders = new AdapterMyOrders(mContext, modelStoreBooking.getResult());
+                        ;
                         binding.rvMyOrder.setAdapter(adapterMyOrders);
                     } else {
-                        AdapterMyOrders adapterMyOrders = new AdapterMyOrders(mContext,null);
+                        AdapterMyOrders adapterMyOrders = new AdapterMyOrders(mContext, null);
                         binding.rvMyOrder.setAdapter(adapterMyOrders);
                     }
 
@@ -233,7 +290,7 @@ public class SelectService extends AppCompatActivity {
     }
 
     private void supportApi() {
-        ProjectUtil.showProgressDialog(mContext,true,getString(R.string.please_wait));
+        ProjectUtil.showProgressDialog(mContext, true, getString(R.string.please_wait));
         Api api = ApiFactory.getClientWithoutHeader(mContext).create(Api.class);
 
         Call<ResponseBody> call = api.getSupportApi();
@@ -246,10 +303,10 @@ public class SelectService extends AppCompatActivity {
                     String stringResponse = response.body().string();
                     JSONObject jsonObject = new JSONObject(stringResponse);
 
-                    Log.e("supportApi","supportApi = " + stringResponse);
+                    Log.e("supportApi", "supportApi = " + stringResponse);
 
-                    if(jsonObject.getString("status").equals("1")) {
-                        ModelSupport modelSupport = new Gson().fromJson(stringResponse,ModelSupport.class);
+                    if (jsonObject.getString("status").equals("1")) {
+                        ModelSupport modelSupport = new Gson().fromJson(stringResponse, ModelSupport.class);
                         supportDialog(modelSupport);
                     } else {
                         Toast.makeText(SelectService.this, "Support is not available at this time", Toast.LENGTH_SHORT).show();
@@ -271,11 +328,11 @@ public class SelectService extends AppCompatActivity {
     private void supportDialog(ModelSupport modelSupport) {
         Dialog dialog = new Dialog(mContext, WindowManager.LayoutParams.MATCH_PARENT);
         SupportDialogBinding dialogBinding = DataBindingUtil
-                .inflate(LayoutInflater.from(mContext),R.layout.support_dialog,
-                        null,false);
+                .inflate(LayoutInflater.from(mContext), R.layout.support_dialog,
+                        null, false);
         dialog.setContentView(dialogBinding.getRoot());
 
-        AdapterSupports adapterSupports = new AdapterSupports(mContext,modelSupport.getResult());
+        AdapterSupports adapterSupports = new AdapterSupports(mContext, modelSupport.getResult());
         dialogBinding.rvSupport.setAdapter(adapterSupports);
 
         dialogBinding.ivBack.setOnClickListener(v -> {
@@ -288,8 +345,8 @@ public class SelectService extends AppCompatActivity {
     private void compAccDialog() {
         Dialog dialog = new Dialog(mContext, WindowManager.LayoutParams.MATCH_PARENT);
         CompAccountDialogBinding dialogBinding = DataBindingUtil
-                .inflate(LayoutInflater.from(mContext),R.layout.comp_account_dialog,
-                        null,false);
+                .inflate(LayoutInflater.from(mContext), R.layout.comp_account_dialog,
+                        null, false);
         dialog.setContentView(dialogBinding.getRoot());
 
         dialogBinding.ivBack.setOnClickListener(v -> {
