@@ -42,6 +42,9 @@ public class PaymentDevOptionAct extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this,R.layout.activity_payment_dev_option);
         param = (HashMap<String, String>) getIntent().getSerializableExtra("param");
+        
+        Log.e("fdsfdsfsdfds",param.toString());
+        
         itit();
     }
 

@@ -9,7 +9,8 @@ import com.tech.amanah.R;
 public class BaseClass {
 
     // public static String BaseUrl="http://amanahservices.com/AmanahServices/webservice/";
-    public static String BaseUrl = "http://equipmeapp.co.nz/AmanahServices/webservice/";
+    //public static String BaseUrl = "http://equipmeapp.co.nz/AmanahServices/webservice/";
+    public static String BaseUrl = "http://technorizen.co.in/AmanahServices/webservice/";
 
     public static BaseClass get() {
         return new BaseClass();

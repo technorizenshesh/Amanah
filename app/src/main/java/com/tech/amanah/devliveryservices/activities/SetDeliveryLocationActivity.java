@@ -29,16 +29,19 @@ public class SetDeliveryLocationActivity extends AppCompatActivity {
     SharedPref sharedPref;
     ModelLogin modelLogin;
     AlertDialog.Builder alertBuilder;
-    HashMap<String,String> bookingParams = new HashMap<>();
+    HashMap<String, String> bookingParams = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this,R.layout.activity_set_delivery_location);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_set_delivery_location);
         sharedPref = SharedPref.getInstance(mContext);
         modelLogin = sharedPref.getUserDetails(AppConstant.USER_DETAILS);
 
-        bookingParams = (HashMap<String,String>) getIntent().getSerializableExtra(AppConstant.STORE_BOOKING_PARAMS);
+        bookingParams = (HashMap<String, String>) getIntent().getSerializableExtra(AppConstant.STORE_BOOKING_PARAMS);
+
+        Log.e("fdsfdsfsdfds", bookingParams.toString());
+
         itit();
 
     }
@@ -50,22 +53,22 @@ public class SetDeliveryLocationActivity extends AppCompatActivity {
         });
 
         binding.etAddress.setOnClickListener(v -> {
-            startActivityForResult(new Intent(mContext, PinLocationActivity.class),222);
+            startActivityForResult(new Intent(mContext, PinLocationActivity.class), 222);
         });
 
         binding.btNext.setOnClickListener(v -> {
-            if(TextUtils.isEmpty(binding.etAddress.getText().toString().trim())) {
+            if (TextUtils.isEmpty(binding.etAddress.getText().toString().trim())) {
                 Toast.makeText(mContext, getString(R.string.please_select_add), Toast.LENGTH_SHORT).show();
-            } else if(TextUtils.isEmpty(binding.etLandMark.getText().toString().trim())) {
+            } else if (TextUtils.isEmpty(binding.etLandMark.getText().toString().trim())) {
                 Toast.makeText(mContext, getString(R.string.please_enterlandmark_add), Toast.LENGTH_SHORT).show();
             } else {
-                bookingParams.put("address",binding.etAddress.getText().toString().trim()
-                        +" "+binding.etLandMark.getText().toString().trim());
+                bookingParams.put("address", binding.etAddress.getText().toString().trim()
+                        + " " + binding.etLandMark.getText().toString().trim());
                 bookingParams.put("lat", String.valueOf(latLng.latitude));
                 bookingParams.put("lon", String.valueOf(latLng.longitude));
 
-                startActivity(new Intent(mContext,PaymentDevOptionAct.class)
-                        .putExtra("param",bookingParams)
+                startActivity(new Intent(mContext, PaymentDevOptionAct.class)
+                        .putExtra("param", bookingParams)
                 );
 
             }
@@ -76,14 +79,14 @@ public class SetDeliveryLocationActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == 222) {
+        if (resultCode == 222) {
             String add = data.getStringExtra("add");
-            Log.e("sfasfdas","fdasfdas = 222 = " + add);
-            Log.e("sfasfdas","fdasfdas = lat = " + data.getDoubleExtra("lat",0.0));
-            Log.e("sfasfdas","fdasfdas = lon = " + data.getDoubleExtra("lon",0.0));
-            double lat = data.getDoubleExtra("lat",0.0);
-            double lon = data.getDoubleExtra("lon",0.0);
-            latLng = new LatLng(lat,lon);
+            Log.e("sfasfdas", "fdasfdas = 222 = " + add);
+            Log.e("sfasfdas", "fdasfdas = lat = " + data.getDoubleExtra("lat", 0.0));
+            Log.e("sfasfdas", "fdasfdas = lon = " + data.getDoubleExtra("lon", 0.0));
+            double lat = data.getDoubleExtra("lat", 0.0);
+            double lon = data.getDoubleExtra("lon", 0.0);
+            latLng = new LatLng(lat, lon);
             binding.etAddress.setText(add);
         }
     }

@@ -114,7 +114,7 @@ public class ProjectUtil {
 
     }
 
-    public static void blinkAnimation(View view){
+    public static void blinkAnimation(View view) {
         Animation anim = new AlphaAnimation(0.0f, 1.0f);
         anim.setDuration(50);
         anim.setStartOffset(20);
@@ -136,25 +136,26 @@ public class ProjectUtil {
         nManager.cancelAll();
     }
 
-    public static void sendEmail(Context mContext,String email) {
+    public static void sendEmail(Context mContext, String email) {
+
         Intent emailSelectorIntent = new Intent(Intent.ACTION_SENDTO);
         emailSelectorIntent.setData(Uri.parse("mailto:"));
 
         final Intent emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT,"");
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "");
         emailIntent.setSelector(emailSelectorIntent);
 
-        if(emailIntent.resolveActivity(mContext.getPackageManager())!=null)
-            mContext.startActivity(emailIntent);
+        if (emailIntent.resolveActivity(mContext.getPackageManager()) != null) mContext.startActivity(emailIntent);
+
     }
 
-    public static void call(Context mContext,String no) {
+    public static void call(Context mContext, String no) {
         Intent intent = new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", no, null));
         mContext.startActivity(intent);
     }
 
-    public static void imageShowFullscreenDialog(Context mContext,String url) {
+    public static void imageShowFullscreenDialog(Context mContext, String url) {
         Dialog dialog = new Dialog(mContext, WindowManager.LayoutParams.MATCH_PARENT);
         dialog.setContentView(R.layout.image_fullscreen_dialog);
         TouchImageView ivImage = dialog.findViewById(R.id.ivImage);
@@ -182,7 +183,7 @@ public class ProjectUtil {
         String parameters = str_origin + "&" + str_dest + "&" + sensor + "&key=" + context.getResources().getString(R.string.googlekey_other);
         String output = "json";
         String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
-        Log.e("PathURL","====>"+url);
+        Log.e("PathURL", "====>" + url);
         return url;
     }
 

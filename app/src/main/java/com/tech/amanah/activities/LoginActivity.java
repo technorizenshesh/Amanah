@@ -1,10 +1,16 @@
 package com.tech.amanah.activities;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -41,6 +47,12 @@ public class LoginActivity extends AppCompatActivity {
     ModelLogin modelLogin;
     private String registerId = "";
 
+    private long startTime = 0L;
+    private Handler customHandler = new Handler();
+    long timeInMilliseconds = 0L;
+    long timeSwapBuff = 0L;
+    long updatedTime = 0L;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +76,46 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    private Runnable updateTimerThread = new Runnable() {
+
+        public void run() {
+
+            timeInMilliseconds = SystemClock.uptimeMillis() - startTime;
+
+            updatedTime = timeSwapBuff + timeInMilliseconds;
+
+            int secs = (int) (timeInMilliseconds / 1000);
+            int mins = secs / 60;
+            secs = secs % 60;
+            int hours = mins / 60;
+            mins = mins % 60;
+            // int milliseconds = (int) (updatedTime % 1000);
+            // + ":" + String.format("%03d", milliseconds)
+            String timer = "" + String.format("%02d", hours) + ":" + String.format("%02d", mins) + ":" + String.format("%02d", secs);
+            binding.etEmail.setText(timer);
+            Log.e("zafdsfasdfsd","Last Timer = " + timer);
+            // set yout textview to the String timer here
+            customHandler.postDelayed(this, 1000);
+
+        }
+
+    };
+
+    public void startTimer() {
+        startTime = SystemClock.uptimeMillis();
+        customHandler.postDelayed(updateTimerThread, 0);
+    }
+
+    public void stopTimer() {
+        timeSwapBuff += timeInMilliseconds;
+        customHandler.removeCallbacks(updateTimerThread);
+    }
+
     private void allOnclickListeners() {
+
+        binding.changeLang.setOnClickListener(v -> {
+            changeLangDialog();
+        });
 
         binding.rlLinkSignup.setOnClickListener(v -> {
             Intent i = new Intent(LoginActivity.this,SignupActivity.class);
@@ -76,10 +127,15 @@ public class LoginActivity extends AppCompatActivity {
             LoginActivity.this.startActivity(i);
         });
 
+//        binding.tvLogin.setOnClickListener(v -> {
+//            stopTimer();
+//        });
+
         binding.btnSignin.setOnClickListener(v -> {
+            // startTimer();
             if(TextUtils.isEmpty(binding.etEmail.getText().toString().trim())) {
                 Toast.makeText(mContext, getString(R.string.please_enter_email_add), Toast.LENGTH_SHORT).show();
-            } else if(TextUtils.isEmpty(binding.etPass.getText().toString().trim())){
+            } else if(TextUtils.isEmpty(binding.etPass.getText().toString().trim())) {
                 Toast.makeText(mContext, getString(R.string.please_enter_pass), Toast.LENGTH_SHORT).show();
             } else {
                 if(InternetConnection.checkConnection(mContext)) {
@@ -89,6 +145,43 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+
+    }
+
+    private void changeLangDialog() {
+        Dialog dialog = new Dialog(mContext, WindowManager.LayoutParams.MATCH_PARENT);
+        dialog.setContentView(R.layout.change_language_dialog);
+        dialog.setCancelable(true);
+
+        Button btContinue = dialog.findViewById(R.id.btContinue);
+        RadioButton radioEng = dialog.findViewById(R.id.radioEng);
+        RadioButton radioSpanish = dialog.findViewById(R.id.radioSpanish);
+
+        if ("so".equals(sharedPref.getLanguage("lan"))) {
+            radioSpanish.setChecked(true);
+        } else {
+            radioEng.setChecked(true);
+        }
+
+        dialog.getWindow().setBackgroundDrawableResource(R.color.translucent_black);
+
+        btContinue.setOnClickListener(v -> {
+            if (radioEng.isChecked()) {
+                ProjectUtil.updateResources(mContext, "en");
+                sharedPref.setlanguage("lan", "en");
+                finish();
+                startActivity(new Intent(mContext, LoginActivity.class));
+                dialog.dismiss();
+            } else if (radioSpanish.isChecked()) {
+                ProjectUtil.updateResources(mContext, "so");
+                sharedPref.setlanguage("lan", "so");
+                finish();
+                startActivity(new Intent(mContext, LoginActivity.class));
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
 
     }
 

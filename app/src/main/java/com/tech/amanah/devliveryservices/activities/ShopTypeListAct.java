@@ -49,6 +49,7 @@ public class ShopTypeListAct extends AppCompatActivity {
     }
 
     private void itit() {
+        
         getCategoryApiCall();
 
         binding.rlCart.setOnClickListener(v -> {

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Aksha_data/Akash_New_Running_Projects/AmanahDeliverApp/Amanah/app/src/main/res/drawable/green_outline_back.xml" value="0.2203125" />
+        <entry key="..\:/Aksha_data/Akash_New_Running_Projects/AmanahDeliverApp/Amanah/app/src/main/res/drawable/trans_icon_edit.xml" value="0.2203125" />
+        <entry key="..\:/Aksha_data/Akash_New_Running_Projects/AmanahDeliverApp/Amanah/app/src/main/res/layout/activity_add_shop_details.xml" value="0.20416666666666666" />
+        <entry key="..\:/Aksha_data/Akash_New_Running_Projects/AmanahDeliverApp/Amanah/app/src/main/res/layout/activity_company_details.xml" value="0.20416666666666666" />
+        <entry key="..\:/Aksha_data/Akash_New_Running_Projects/AmanahDeliverApp/Amanah/app/src/main/res/layout/activity_image_upload.xml" value="0.22" />
+        <entry key="..\:/Aksha_data/Akash_New_Running_Projects/AmanahDeliverApp/Amanah/app/src/main/res/layout/activity_login.xml" value="0.20416666666666666" />
+        <entry key="..\:/Aksha_data/Akash_New_Running_Projects/AmanahDeliverApp/Amanah/app/src/main/res/layout/activity_my_cart.xml" value="0.20416666666666666" />
+        <entry key="..\:/Aksha_data/Akash_New_Running_Projects/AmanahDeliverApp/Amanah/app/src/main/res/layout/activity_payment_summary.xml" value="0.20416666666666666" />
+        <entry key="..\:/Aksha_data/Akash_New_Running_Projects/AmanahDeliverApp/Amanah/app/src/main/res/layout/activity_pin_location.xml" value="0.20416666666666666" />
+        <entry key="..\:/Aksha_data/Akash_New_Running_Projects/AmanahDeliverApp/Amanah/app/src/main/res/layout/activity_select_service.xml" value="0.20416666666666666" />
+        <entry key="..\:/Aksha_data/Akash_New_Running_Projects/AmanahDeliverApp/Amanah/app/src/main/res/layout/activity_shop_home.xml" value="0.20416666666666666" />
+        <entry key="..\:/Aksha_data/Akash_New_Running_Projects/AmanahDeliverApp/Amanah/app/src/main/res/layout/activity_shop_list.xml" value="0.20416666666666666" />
+        <entry key="..\:/Aksha_data/Akash_New_Running_Projects/AmanahDeliverApp/Amanah/app/src/main/res/layout/activity_signup.xml" value="0.20416666666666666" />
+        <entry key="..\:/Aksha_data/Akash_New_Running_Projects/AmanahDeliverApp/Amanah/app/src/main/res/layout/activity_track.xml" value="0.20416666666666666" />
+        <entry key="..\:/Aksha_data/Akash_New_Running_Projects/AmanahDeliverApp/Amanah/app/src/main/res/layout/adapter_dev_orders.xml" value="0.25" />
+        <entry key="..\:/Aksha_data/Akash_New_Running_Projects/AmanahDeliverApp/Amanah/app/src/main/res/layout/adapter_my_cart_store.xml" value="0.20416666666666666" />
+        <entry key="..\:/Aksha_data/Akash_New_Running_Projects/AmanahDeliverApp/Amanah/app/src/main/res/layout/dialog_message.xml" value="0.20416666666666666" />
+        <entry key="..\:/Aksha_data/Akash_New_Running_Projects/AmanahDeliverApp/Amanah/app/src/main/res/layout/dialog_search_driver.xml" value="0.20416666666666666" />
+        <entry key="..\:/Aksha_data/Akash_New_Running_Projects/AmanahDeliverApp/Amanah/app/src/main/res/layout/dialog_trip_ended.xml" value="0.20416666666666666" />
+        <entry key="..\:/Aksha_data/Akash_New_Running_Projects/AmanahDeliverApp/Amanah/app/src/main/res/layout/food_order_detail_dialog.xml" value="0.20416666666666666" />
+        <entry key="..\:/Aksha_data/Akash_New_Running_Projects/AmanahDeliverApp/Amanah/app/src/main/res/layout/image_fullscreen_dialog.xml" value="0.20416666666666666" />
+      </map>
+    </option>
+  </component>
+  <component name="ExternalStorageConfigurationManager" enabled="true" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK" />
+</project>

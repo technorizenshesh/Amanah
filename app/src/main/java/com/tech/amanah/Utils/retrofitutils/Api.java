@@ -23,6 +23,10 @@ public interface Api {
     Call<ResponseBody> myOrderApiCall(@FieldMap Map<String, String> params);
 
     @FormUrlEncoded
+    @POST("remove_cart_data")
+    Call<ResponseBody> removeCartDataApiCall(@FieldMap Map<String, String> params);
+
+    @FormUrlEncoded
     @POST("get_my_shop_orders")
     Call<ResponseBody> myShopOrderApiCall(@FieldMap Map<String, String> params);
 

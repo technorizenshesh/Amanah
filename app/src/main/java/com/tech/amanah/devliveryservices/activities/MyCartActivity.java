@@ -1,9 +1,5 @@
 package com.tech.amanah.devliveryservices.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -14,21 +10,24 @@ import android.view.LayoutInflater;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.google.gson.Gson;
+import com.tech.amanah.Application.MyApplication;
 import com.tech.amanah.R;
 import com.tech.amanah.Utils.AppConstant;
 import com.tech.amanah.Utils.ProjectUtil;
 import com.tech.amanah.Utils.SharedPref;
 import com.tech.amanah.Utils.retrofitutils.Api;
 import com.tech.amanah.Utils.retrofitutils.ApiFactory;
-import com.tech.amanah.activities.LoginActivity;
 import com.tech.amanah.databinding.ActivityMyCartBinding;
 import com.tech.amanah.databinding.PromoCodeDialogBinding;
 import com.tech.amanah.devliveryservices.adapters.AdapterMyCart;
 import com.tech.amanah.devliveryservices.models.ModelMyStoreCart;
 import com.tech.amanah.taxiservices.models.ModelLogin;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -48,10 +47,11 @@ public class MyCartActivity extends AppCompatActivity {
     ModelLogin modelLogin;
     StringBuilder builder = new StringBuilder();
     StringBuilder builderStore = new StringBuilder();
-    String storeAmountString = "";
+    String storeAmountString = "", isCodeApply = "FALSE", appliedCode = "";
     String storeId = null;
     double itemTotal = 0.0;
     boolean isCodeApplied = false;
+    private int counter = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +98,12 @@ public class MyCartActivity extends AppCompatActivity {
                     params.put("book_date", currentDate);
                     params.put("book_time", currentTime);
                     params.put("amount", storeAmountString);
+                    params.put("apply_code", appliedCode);
+                    params.put("coupon_code_status", isCodeApply);
                     params.put("amounttotal", String.valueOf(itemTotal));
+
+                    Log.e("dsfsdfsf", "amounttotal = " + itemTotal);
+                    Log.e("dsfsdfsf", "params = " + params);
 
                     startActivity(new Intent(mContext, SetDeliveryLocationActivity.class)
                             .putExtra(AppConstant.STORE_BOOKING_PARAMS, params)
@@ -169,19 +174,26 @@ public class MyCartActivity extends AppCompatActivity {
                             double totalDiscountInPrice = itemTotal * (Double.parseDouble(resultJson.getString("amount")) / 100);
                             double finalAmount = itemTotal - totalDiscountInPrice;
                             itemTotal = finalAmount;
-                            binding.itemPlusDevCharges.setText(AppConstant.CURRENCY + " " + itemTotal);
+                            isCodeApply = "TRUE";
+                            appliedCode = code;
+                            binding.toPay.setText(AppConstant.CURRENCY + " " + itemTotal);
                             Log.e("asdasdasdasd", "totalDiscountInPrice = " + totalDiscountInPrice);
                             Log.e("asdasdasdasd", "finalAmount = " + finalAmount);
+                            MyApplication.showAlert(mContext,"Code Applied");
                         } else {
+                            isCodeApply = "TRUE";
+                            appliedCode = code;
                             double finalAmount = itemTotal - (Double.parseDouble(resultJson.getString("amount")));
+                            Log.e("finalAmount", "finalAmount = " + finalAmount);
                             itemTotal = finalAmount;
-                            binding.itemPlusDevCharges.setText(AppConstant.CURRENCY + " " + itemTotal);
+                            binding.toPay.setText(AppConstant.CURRENCY + " " + itemTotal);
+                            MyApplication.showAlert(mContext,"Code Applied");
                         }
 
                         Log.e("asfddasfasdf", "response = " + response);
 
                     } else {
-
+                        MyApplication.showAlert(mContext,"You enter a wrong coupon code or you already applied these coupon code");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -199,6 +211,8 @@ public class MyCartActivity extends AppCompatActivity {
     }
 
     private void getCartApiCall() {
+
+        counter = 0;
 
         builderStore = new StringBuilder();
         builder = new StringBuilder();
@@ -241,6 +255,9 @@ public class MyCartActivity extends AppCompatActivity {
                         binding.devCharges.setText(AppConstant.CURRENCY + " " + (modelMyStoreCart.getDelivery_charge()));
                         binding.toPay.setText(AppConstant.CURRENCY + " " + (int) itemTotal);
 
+                        isCodeApply = "FALSE";
+                        appliedCode = "";
+
                         HashSet<String> storeHash = new HashSet<>();
                         HashMap<String, String> storeAmountHash = new HashMap<>();
 
@@ -254,8 +271,10 @@ public class MyCartActivity extends AppCompatActivity {
                             builderStore.append(str[i] + ",");
                             for (int j = 0; j < modelMyStoreCart.getResult().size(); j++) {
                                 if (str[i].equals(modelMyStoreCart.getResult().get(j).getShop_id())) {
+                                    counter++;
                                     storeAmountHash.put(modelMyStoreCart.getResult().get(j).getShop_id()
                                             , modelMyStoreCart.getResult().get(j).getItem_amount());
+                                    Log.e("AmountAmount", "storeAmountHash j = " + j + " " + modelMyStoreCart.getResult().get(j).getItem_amount());
                                     builder.append(modelMyStoreCart.getResult().get(j).getCart_id() + ",");
                                 }
                             }
@@ -277,6 +296,7 @@ public class MyCartActivity extends AppCompatActivity {
                                 storeAmountHash.values().toString().replaceAll("\\[|\\]|\\s", ""));
 
                     } else {
+                        isCodeApply = "FALSE";
                         builder = new StringBuilder();
                         builderStore = new StringBuilder();
                         binding.itemPlusDevCharges.setText(AppConstant.CURRENCY + 0.0);
@@ -296,6 +316,7 @@ public class MyCartActivity extends AppCompatActivity {
                 ProjectUtil.pauseProgressDialog();
                 binding.swipLayout.setRefreshing(false);
             }
+
         });
 
     }
@@ -359,12 +380,14 @@ public class MyCartActivity extends AppCompatActivity {
                 ProjectUtil.pauseProgressDialog();
                 binding.swipLayout.setRefreshing(false);
             }
+
         });
 
     }
 
     public void updateCartId(ArrayList<ModelMyStoreCart.Result> itemsList) {
-        getCartItemNew();
+        getCartApiCall();
+//      getCartItemNew();
 //        builder = new StringBuilder();
 //        if(itemsList != null && itemsList.size() != 0) {
 //            for(int i=0;i<itemsList.size();i++) {

@@ -265,8 +265,7 @@ public class SelectService extends AppCompatActivity {
 
                     if (jsonObject.getString("status").equals("1")) {
                         ModelStoreBooking modelStoreBooking = new Gson().fromJson(stringResponse, ModelStoreBooking.class);
-                        AdapterMyOrders adapterMyOrders = new AdapterMyOrders(mContext, modelStoreBooking.getResult());
-                        ;
+                        AdapterMyOrders adapterMyOrders = new AdapterMyOrders(mContext, modelStoreBooking.getResult());;
                         binding.rvMyOrder.setAdapter(adapterMyOrders);
                     } else {
                         AdapterMyOrders adapterMyOrders = new AdapterMyOrders(mContext, null);
@@ -365,6 +364,8 @@ public class SelectService extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         sharedPref.clearAllPreferences();
+                        sharedPref.setlanguage("lan", "en");
+                        ProjectUtil.updateResources(mContext,"en");
                         Intent loginscreen = new Intent(mContext, LoginActivity.class);
                         loginscreen.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         NotificationManager nManager = ((NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE));

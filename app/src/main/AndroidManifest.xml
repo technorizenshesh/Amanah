@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.tech.amanah">
 
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="false" />
-    <uses-feature
-        android:name="android.hardware.camera.autofocus"
-        android:required="false" />
+    <!--    <uses-feature-->
+    <!--        android:name="android.hardware.camera"-->
+    <!--        android:required="false" />-->
+    <!--    -->
+    <!--    <uses-feature-->
+    <!--        android:name="android.hardware.camera.autofocus"-->
+    <!--        android:required="false" />-->
+
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.PICK" />
+        </intent>
+        <intent>
+            <action android:name="android.media.action.IMAGE_CAPTURE" />
+        </intent>
+    </queries>
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -21,79 +30,107 @@
 
     <application
         android:name=".Application.MyApplication"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/amanah_logo"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/amanah_logo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Amanah"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.TrackDriverAct"
+
+        <activity
+            android:name=".activities.ImageUploadAct"
             android:screenOrientation="portrait"></activity>
-        <activity android:name=".shops.activities.ShopOrdersAct"
-            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".activities.TrackDriverAct"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".shops.activities.ShopOrdersAct"
+            android:screenOrientation="portrait" />
+
         <activity
             android:name=".activities.MyOrdersAct"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".activities.PinLocationActivity"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".devliveryservices.activities.CompanyDetailsAct"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".devliveryservices.activities.PaymentDevOptionAct"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".devliveryservices.activities.SetDeliveryLocationActivity"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".devliveryservices.activities.MyCartActivity"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".devliveryservices.activities.ShopItemsAct"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".shops.activities.ShopHomeAct"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".shops.activities.AddShopDetailsAct"
-            android:screenOrientation="portrait" >
-
+            android:screenOrientation="portrait">
         </activity>
+
         <activity
             android:name=".activities.ChnagePassAct"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".activities.ShopDocAct"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".devliveryservices.activities.ShopTypeListAct"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".devliveryservices.activities.ShopListAct"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".taxiservices.activities.TaxiChatingActivity"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".taxiservices.activities.PaymentSummary"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".taxiservices.activities.TrackActivity"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".taxiservices.activities.TaxiHomeAct"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".activities.LoginActivity"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".activities.ForgotPasswordActivity"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".activities.OTPActivity"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".activities.SelectService"
             android:screenOrientation="portrait" />
@@ -129,15 +166,15 @@
 
         <activity android:name=".MainActivity" />
 
-<!--        <provider-->
-<!--            android:name="androidx.core.content.FileProvider"-->
-<!--            android:authorities="com.tech.amanah.fileprovider"-->
-<!--            android:exported="false"-->
-<!--            android:grantUriPermissions="true">-->
-<!--            <meta-data-->
-<!--                android:name="android.support.FILE_PROVIDER_PATHS"-->
-<!--                android:resource="@xml/file_paths"></meta-data>-->
-<!--        </provider>-->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.tech.amanah.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
@@ -154,11 +191,9 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_logo" />
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/red" />
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />

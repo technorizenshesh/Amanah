@@ -21,36 +21,36 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/adeeg_la_isku_halyn_karo"
-                    android:layout_marginLeft="@dimen/_10sdp"
-                    android:textSize="@dimen/_13sdp"
-                    android:textColor="@color/white"
-                    android:fontFamily="@font/inter_bold"
                     android:layout_centerInParent="true"
-                    android:layout_marginTop="@dimen/_7sdp" />
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_7sdp"
+                    android:fontFamily="@font/inter_bold"
+                    android:text="@string/adeeg_la_isku_halyn_karo"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_13sdp" />
 
                 <RelativeLayout
                     android:id="@+id/rlCart"
                     android:layout_width="@dimen/_50sdp"
                     android:layout_height="@dimen/_40sdp"
-                    android:layout_centerVertical="true"
-                    android:elevation="@dimen/_10sdp"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="@dimen/_5sdp">
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/_5sdp"
+                    android:elevation="@dimen/_10sdp">
 
                     <RelativeLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/_8sdp"
                         android:layout_marginTop="@dimen/_5sdp"
-                        android:background="@drawable/green_oval_white">
+                        android:background="@drawable/green_oval_white"
+                        android:padding="@dimen/_8sdp">
 
                         <ImageView
                             android:id="@+id/iv_cart"
                             android:layout_width="@dimen/_20sdp"
                             android:layout_height="@dimen/_20sdp"
                             android:layout_centerInParent="true"
-                            android:src="@drawable/ic_cart_icon_white"/>
+                            android:src="@drawable/ic_cart_icon_white" />
 
                     </RelativeLayout>
 
@@ -58,27 +58,28 @@
                         android:id="@+id/tvCartCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/_10sdp"
-                        android:textStyle="bold"
-                        android:gravity="center"
-                        android:layout_marginRight="@dimen/_5sdp"
                         android:layout_alignParentRight="true"
-                        android:elevation="@dimen/_10sdp"
+                        android:layout_marginRight="@dimen/_5sdp"
                         android:background="@drawable/circle_textview_back"
+                        android:elevation="@dimen/_10sdp"
+                        android:gravity="center"
                         android:padding="@dimen/_5sdp"
                         android:text="0"
-                        android:textColor="@color/black" />
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_10sdp"
+                        android:textStyle="bold" />
 
                 </RelativeLayout>
 
             </RelativeLayout>
 
-   <androidx.recyclerview.widget.RecyclerView
-       android:id="@+id/rvShopCat"
-       android:layout_margin="@dimen/_5sdp"
-       android:layout_width="match_parent"
-       app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-       android:layout_height="match_parent"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvShopCat"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/_5sdp"
+                android:layout_marginBottom="@dimen/_5sdp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         </LinearLayout>
 

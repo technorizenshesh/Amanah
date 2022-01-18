@@ -21,13 +21,17 @@
             android:id="@+id/centerImage"
             android:src="@drawable/user_ic"/>
     </com.skyfishjy.library.RippleBackground>
+
     <ImageView
+        android:id="@+id/btnCancel"
         android:layout_width="@dimen/_35sdp"
         android:layout_height="@dimen/_35sdp"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
-        android:id="@+id/btnCancel"
-        android:layout_margin="@dimen/_20sdp"
-        android:src="@drawable/ic_cancel_red"/>
+        android:layout_marginStart="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_marginEnd="@dimen/_20sdp"
+        android:layout_marginBottom="@dimen/_20sdp"
+        android:src="@drawable/ic_cancel_red" />
 </RelativeLayout>
 </layout>

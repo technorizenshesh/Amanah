@@ -109,7 +109,8 @@ public class SplashActivity extends AppCompatActivity {
                     } else if("so".equals(sharedPref.getLanguage("lan"))) {
                         ProjectUtil.updateResources(mContext,"so");
                     } else {
-                        ProjectUtil.updateResources(mContext,"en");
+                        sharedPref.setlanguage("lan", "so");
+                        ProjectUtil.updateResources(mContext,"so");
                     }
                     if("SHOP".equalsIgnoreCase(modelLogin.getResult().getType())) {
                         Log.e("dasdasdasd","shope status = " + modelLogin.getResult().getShop_status());
@@ -121,11 +122,27 @@ public class SplashActivity extends AppCompatActivity {
                             finish();
                         }
                     } else {
+                        if("en".equals(sharedPref.getLanguage("lan"))) {
+                            ProjectUtil.updateResources(mContext,"en");
+                        } else if("so".equals(sharedPref.getLanguage("lan"))) {
+                            ProjectUtil.updateResources(mContext,"so");
+                        } else {
+                            sharedPref.setlanguage("lan", "so");
+                            ProjectUtil.updateResources(mContext,"so");
+                        }
                         Intent i = new Intent(SplashActivity.this, SelectService.class);
                         startActivity(i);
                         finish();
                     }
                 } else {
+                    if("en".equals(sharedPref.getLanguage("lan"))) {
+                        ProjectUtil.updateResources(mContext,"en");
+                    } else if("so".equals(sharedPref.getLanguage("lan"))) {
+                        ProjectUtil.updateResources(mContext,"so");
+                    } else {
+                        sharedPref.setlanguage("lan", "so");
+                        ProjectUtil.updateResources(mContext,"so");
+                    }
                     Intent i = new Intent(SplashActivity.this, LoginActivity.class);
                     startActivity(i);
                     finish();

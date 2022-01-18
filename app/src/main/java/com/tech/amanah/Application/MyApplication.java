@@ -59,4 +59,18 @@ public class MyApplication extends Application {
                 }).create().show();
     }
 
+    public static void showAlert(Context mContext,String msg) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+        builder.setMessage(msg)
+                .setCancelable(false)
+                .setIcon(R.drawable.ic_logo)
+                .setPositiveButton(mContext.getString(R.string.ok)
+                        , new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).create().show();
+    }
+
 }

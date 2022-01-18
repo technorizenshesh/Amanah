@@ -2,41 +2,27 @@ package com.tech.amanah.taxiservices.activities;
 
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.core.app.ActivityCompat;
-import androidx.core.view.GravityCompat;
-import androidx.databinding.DataBindingUtil;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Dialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Looper;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.ApiException;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.view.GravityCompat;
+import androidx.databinding.DataBindingUtil;
+
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
@@ -56,35 +42,28 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.FetchPlaceRequest;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.Autocomplete;
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode;
-import com.google.android.material.button.MaterialButton;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.squareup.picasso.Picasso;
 import com.tech.amanah.Constent.BaseClass;
 import com.tech.amanah.Constent.DrawPollyLine;
 import com.tech.amanah.R;
 import com.tech.amanah.Utils.AppConstant;
 import com.tech.amanah.Utils.LatLngInterpolator;
 import com.tech.amanah.Utils.MarkerAnimation;
-import com.tech.amanah.Utils.SessionManager;
 import com.tech.amanah.Utils.SharedPref;
 import com.tech.amanah.activities.LoginActivity;
 import com.tech.amanah.activities.ProfileActivity;
 import com.tech.amanah.databinding.ActivityTaxiappHomeBinding;
-import com.tech.amanah.fragments.BottomSheetFragment;
 import com.tech.amanah.taxiservices.Dialogs.DialogMessage;
-import com.tech.amanah.taxiservices.Dialogs.DialogSearchingDriver;
 import com.tech.amanah.taxiservices.Interfaces.onSearchingDialogListener;
 import com.tech.amanah.taxiservices.ModelCurrentBooking;
 import com.tech.amanah.taxiservices.models.ModelAvailableDriver;
 import com.tech.amanah.taxiservices.models.ModelCurrentBookingResult;
 import com.tech.amanah.taxiservices.models.ModelLogin;
 import com.tech.amanah.utility.GPSTracker;
-import com.tech.amanah.utility.NetworkAvailablity;
 import com.tech.amanah.utility.Tools;
 
 import org.json.JSONException;
@@ -548,7 +527,8 @@ public class TaxiHomeAct extends AppCompatActivity implements OnMapReadyCallback
             }
 
             @Override
-            public void Failed(String error) {}
+            public void Failed(String error) {
+            }
 
         });
     }
@@ -558,6 +538,9 @@ public class TaxiHomeAct extends AppCompatActivity implements OnMapReadyCallback
         param.put("user_id", modelLogin.getResult().getId());
         param.put("type", "USER");
         param.put("timezone", Tools.get().getTimeZone());
+
+        Log.e("dsgfdsfdsfds", "paramparam = " + param);
+
         ApiCallBuilder.build(this).setUrl(BaseClass.get().getCurrentBooking())
                 .setParam(param).isShowProgressBar(true)
                 .execute(new ApiCallBuilder.onResponse() {
@@ -587,9 +570,9 @@ public class TaxiHomeAct extends AppCompatActivity implements OnMapReadyCallback
                                         j.putExtra("data", data);
                                         startActivity(j);
                                     } else if (result.getStatus().equalsIgnoreCase("End")) {
-//                                      Intent j = new Intent(TaxiHomeAct.this, PaymentSummary.class);
-//                                      j.putExtra("data",data);
-//                                      startActivity(j);
+//                                        Intent j = new Intent(TaxiHomeAct.this, PaymentSummary.class);
+//                                        j.putExtra("data", data);
+//                                        startActivity(j);
                                     }
                                 }
                             }

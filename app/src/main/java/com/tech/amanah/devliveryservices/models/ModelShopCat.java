@@ -35,6 +35,16 @@ public class ModelShopCat implements Serializable {
         private String id;
 
         private String category_name;
+        
+        private String category_sumali_lang;
+
+        public String getCategory_sumali_lang() {
+            return category_sumali_lang;
+        }
+
+        public void setCategory_sumali_lang(String category_sumali_lang) {
+            this.category_sumali_lang = category_sumali_lang;
+        }
 
         public void setId(String id){
             this.id = id;

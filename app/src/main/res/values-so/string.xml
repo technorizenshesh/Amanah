@@ -10,6 +10,8 @@
     <string name="delivery_services">Adeega La Isku Halayn Karo</string>
     <string name="adeeg_la_isku_halyn_karo">Adeega La Isku Halayn Karo</string>
 
+    <string name="sign_in">Soo gal</string>
+
     <string name="session_expire">Wakhtigaagi Wuu Dhacay, Mar Kale Gal!</string>
     <string name="api_key" translatable="false">AIzaSyAEfOYNjTV0R7iB7jcnYwIqA6l0tbvR2Y4</string>
     <string name="googlekey_other" translatable="false">AIzaSyAEfOYNjTV0R7iB7jcnYwIqA6l0tbvR2Y4</string>
@@ -115,7 +117,7 @@
     <string name="Shop_front_copy">Sawirka wajihaad ee dukaankaaga</string>
     <string name="shop_type">Dooro nooca dukaankaaga</string>
     <string name="all_fields_man">Waa inaa la buuxiyaa qoraal kasta</string>
-    <string name="another_res_added_cart_text">>ma doonaysaa inaad ka saarto dalabkii hore ee tukaankii  hore?</string>
+    <string name="another_res_added_cart_text">>Bakhaar kale Alaabooyin ayaa lagu daraa gaadhigaaga ma doonaysaa in aad nadiifiso gaadhiga?</string>
     <string name="please_add_item_img">Fadlan ku dar sawirka shayga</string>
     <string name="please_upload_shop_front_copy">Sawirka wajihaad ee dukaankaaga</string>
     <string name="please_upload_busi_license_copy">Falan ku dar koobiga shatiga ganacsiga</string>
@@ -181,7 +183,7 @@
     <string name="driver_name">Magaca Dirawalka</string>
     <string name="title">Darajo</string>
     <string name="support">Cawin</string>
-    <string name="qr_code_for_this_order">Fadlan iska baar QR koodka macmiilka si aad u dhammaystirto gaarsiinta</string>
+    <string name="qr_code_for_this_order">U ogolow darawalku inuu sawiro barcode kaaga marka uu yimaado</string>
     <string name="ride_history">Taariikhda raacistaada</string>
     <string name="pickup_location">Goobta qaadista</string>
     <string name="select_pay_type">Dooro nooca lacag bixinta</string>
@@ -189,6 +191,8 @@
     <string name="car_number">Gaadhiga Tarikada</string>
     <string name="detination_location">Goobta loo socdo</string>
     <string name="cash">Lacag</string>
+
+    <string name="delivery_charge">Kharashka Bixinta</string>
     <string name="cancel_ride_text">Ma hubtaa inaad rabto inaad baajiso raacitanka</string>
     <string name="driver_arrived">Darawalii baa yamid</string>
     <string name="trip_start">Safarka ayaa bilaabmay</string>
@@ -224,6 +228,11 @@
     <string name="please_enter_code">Fadlan, geli kookhka</string>
     <string name="item_total">Wadarta alaabta</string>
     <string name="dev_charge">Qiimaha Adeega ee AMANAH</string>
+
+    <string name="two_stores_items_added">Durba 5 shay ayaa lagu soo daray gaarigaaga, ugu badnaan 5 shay waxaad ku dari kartaa gaarigaaga</string>
+    <string name="waiting_driver">Bilow wakhtiga sugitaanka darawalka</string>
+    <string name="select_action">Dooro Ficil</string>
+    <string name="add_items_in_cart">Gaariga ka saar guusha! Hadda waxaad ku dari kartaa alaabta gaarigaaga</string>
 
     <string-array name="user_type">
         <item>Waxaan ahay macmil</item>

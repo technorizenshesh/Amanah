@@ -10,9 +10,11 @@
     <string name="delivery_services">Delivery Services</string>
     <string name="adeeg_la_isku_halyn_karo">Adeeg La Isku, Halyn karo</string>
 
+    <string name="sign_in">Sign In</string>
     <string name="session_expire">Your session has expired, Login Again!</string>
     <string name="api_key" translatable="false">AIzaSyAEfOYNjTV0R7iB7jcnYwIqA6l0tbvR2Y4</string>
-    <string name="googlekey_other" translatable="false">AIzaSyAEfOYNjTV0R7iB7jcnYwIqA6l0tbvR2Y4</string>
+    <!--<string name="googlekey_other" translatable="false">AIzaSyAEfOYNjTV0R7iB7jcnYwIqA6l0tbvR2Y4</string>-->
+    <string name="googlekey_other" translatable="false">AIzaSyAAjp4wuz5FyteoKH3Yp7Cv8pS1K86fJw0</string>
 
     <string name="dialog">Dialog</string>
     <string name="please_select_the_reason_for_cancellation">Please enter the reason<br /> for cancellation:</string>
@@ -115,7 +117,7 @@
     <string name="Shop_front_copy">Shop Front Copy</string>
     <string name="shop_type">Select Shop Type</string>
     <string name="all_fields_man">All fields are mandatory</string>
-    <string name="another_res_added_cart_text">Another store Items is Added to your do you want to clear the cart?</string>
+    <string name="another_res_added_cart_text">Another store Items is Added to your cart do you want to clear the cart?</string>
     <string name="please_add_item_img">PLease add Item Image</string>
     <string name="please_upload_shop_front_copy">Please add shop front copy</string>
     <string name="please_upload_busi_license_copy">Please add business license copy</string>
@@ -224,6 +226,11 @@
     <string name="please_enter_code">Please enter code</string>
     <string name="item_total">Item Total</string>
     <string name="dev_charge">Delivery Charges</string>
+    <string name="delivery_charge">Delivery Charge</string>
+    <string name="two_stores_items_added">Already 5 items added in your cart, maximum 5 item you can added into your cart</string>
+    <string name="waiting_driver">Start Waiting time For Driver</string>
+    <string name="select_action">Select Action</string>
+    <string name="add_items_in_cart">Cart Remove Success! Now you can add items in your cart</string>
 
     <string-array name="user_type">
         <item>I Am User</item>

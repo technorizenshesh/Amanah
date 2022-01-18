@@ -244,7 +244,6 @@ public class TrackActivity extends AppCompatActivity implements OnMapReadyCallba
         }
     }
 
-
     BroadcastReceiver statusReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {

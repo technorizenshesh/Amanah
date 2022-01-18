@@ -51,10 +51,15 @@ public class ModelStoreBooking implements Serializable {
         private String payment_type;
 
         private String driver_name;
+        
         private String name;
+        
         private String driver_mobile;
+        
         private String driver_lisence_img;
+        
         private String responsible_letter_img;
+        
         private String identification_img;
 
         private String status;

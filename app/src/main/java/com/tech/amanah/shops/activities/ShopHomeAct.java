@@ -17,6 +17,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -27,12 +30,14 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.tech.amanah.R;
 import com.tech.amanah.Utils.AppConstant;
 import com.tech.amanah.Utils.Compress;
 import com.tech.amanah.Utils.ProjectUtil;
+import com.tech.amanah.Utils.RealPathUtil;
 import com.tech.amanah.Utils.SharedPref;
 import com.tech.amanah.Utils.retrofitutils.Api;
 import com.tech.amanah.Utils.retrofitutils.ApiFactory;
@@ -181,15 +186,27 @@ public class ShopHomeAct extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case 0:
-                                ProjectUtil.openGallery(mContext, GALLERY);
+                                choosePhotoFromGallery();
                                 break;
                             case 1:
-                                str_image_path = ProjectUtil.openCamera(mContext, CAMERA);
+                                takePhotoFromCamera();
                                 break;
                         }
                     }
                 });
         pictureDialog.show();
+    }
+
+    public void choosePhotoFromGallery() {
+        Intent pickPhoto = new Intent(Intent.ACTION_GET_CONTENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        pickPhoto.setType("image/*");
+        startActivityForResult(pickPhoto, 1);
+    }
+
+    private void takePhotoFromCamera() {
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (cameraIntent.resolveActivity(mContext.getPackageManager()) != null)
+            startActivityForResult(cameraIntent, 0);
     }
 
     @Override
@@ -198,7 +215,7 @@ public class ShopHomeAct extends AppCompatActivity {
 
         if (requestCode == GALLERY) {
             if (resultCode == RESULT_OK) {
-                String path = ProjectUtil.getRealPathFromURI(mContext, data.getData());
+                String path = RealPathUtil.getRealPath(mContext, data.getData());
                 mFile = new File(path);
                 Compress.get(mContext).setQuality(90).execute(new Compress.onSuccessListener() {
                     @Override
@@ -209,51 +226,48 @@ public class ShopHomeAct extends AppCompatActivity {
             }
         } else if (requestCode == CAMERA) {
             if (resultCode == RESULT_OK) {
-                mFile = new File(str_image_path);
-                Compress.get(mContext).setQuality(90).execute(new Compress.onSuccessListener() {
-                    @Override
-                    public void response(boolean status, String message, File file) {
-                        dialogBinding.ivItemImg.setImageURI(Uri.parse(file.getPath()));
+                try {
+                    if (data != null) {
+                        Bundle extras = data.getExtras();
+                        Bitmap bitmapNew = (Bitmap) extras.get("data");
+                        Bitmap imageBitmap = BITMAP_RE_SIZER(bitmapNew, bitmapNew.getWidth(), bitmapNew.getHeight());
+
+                        Uri tempUri = getImageUri(mContext, imageBitmap);
+
+                        String image = RealPathUtil.getRealPath(mContext, tempUri);
+
+                        Compress.get(mContext).setQuality(90).execute(new Compress.onSuccessListener() {
+                            @Override
+                            public void response(boolean status, String message, File file) {
+                                dialogBinding.ivItemImg.setImageURI(Uri.parse(file.getPath()));
+                            }
+                        }).CompressedImage(image);
                     }
-                }).CompressedImage(str_image_path);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }
         }
 
-        //        if (requestCode == GALLERY) {
-//            if (resultCode == RESULT_OK) {
-//                if (data != null) {
-//                    Uri contentURI = data.getData();
-//                    try {
-//                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), contentURI);
-//                        String path = getRealPathFromURI(getImageUri(mContext, bitmap));
-//                        mFile = new File(path);
-//
-//                        Compress.get(mContext).setQuality(40).execute(new Compress.onSuccessListener() {
-//                            @Override
-//                            public void response(boolean status, String message, File file) {
-//                                dialogBinding.ivItemImg.setImageURI(Uri.parse(file.getPath()));
-//                            }
-//                        }).CompressedImage(mFile.getPath());
-//                        // dialogBinding.ivItemImg.setImageURI(Uri.parse(path));
-//                    } catch (Exception e) {
-//                        Log.e("hjagksads", "image = " + e.getMessage());
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//        } else if (requestCode == CAMERA) {
-//            if (resultCode == RESULT_OK) {
-//                Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-//                String path = getRealPathFromURI(getImageUri(mContext, thumbnail));
-//                mFile = new File(path);
-//                Compress.get(mContext).setQuality(40).execute(new Compress.onSuccessListener() {
-//                    @Override
-//                    public void response(boolean status, String message, File file) {
-//                        dialogBinding.ivItemImg.setImageURI(Uri.parse(file.getPath()));
-//                    }
-//                }).CompressedImage(mFile.getPath());
-//            }
-//        }
+    }
+
+    public Bitmap BITMAP_RE_SIZER(Bitmap bitmap, int newWidth, int newHeight) {
+        Bitmap scaledBitmap = Bitmap.createBitmap(newWidth, newHeight, Bitmap.Config.ARGB_8888);
+
+        float ratioX = newWidth / (float) bitmap.getWidth();
+        float ratioY = newHeight / (float) bitmap.getHeight();
+        float middleX = newWidth / 2.0f;
+        float middleY = newHeight / 2.0f;
+
+        Matrix scaleMatrix = new Matrix();
+        scaleMatrix.setScale(ratioX, ratioY, middleX, middleY);
+
+        Canvas canvas = new Canvas(scaledBitmap);
+        canvas.setMatrix(scaleMatrix);
+        canvas.drawBitmap(bitmap, middleX - bitmap.getWidth() / 2, middleY - bitmap.getHeight() / 2, new Paint(Paint.FILTER_BITMAP_FLAG));
+
+        return scaledBitmap;
 
     }
 

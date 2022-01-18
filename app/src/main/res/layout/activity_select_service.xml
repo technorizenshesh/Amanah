@@ -78,7 +78,7 @@
                             android:fontFamily="@font/inter_medium"
                             android:text="@string/delivery_services"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_14sdp" />
+                            android:textSize="@dimen/_12sdp" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -134,7 +134,7 @@
                             android:fontFamily="@font/inter_medium"
                             android:text="@string/taxi_services"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_14sdp" />
+                            android:textSize="@dimen/_12sdp" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -159,7 +159,6 @@
                 <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="gone"
                     android:layout_margin="@dimen/_5sdp"
                     android:id="@+id/swipLayout">
 
@@ -190,3 +189,4 @@
     </androidx.drawerlayout.widget.DrawerLayout>
 
 </layout>
+
